@@ -10,6 +10,7 @@ import { BudgetOverviewWidget } from "@/components/dashboard/BudgetOverviewWidge
 import { FinancialInsightsWidget } from "@/components/dashboard/FinancialInsightsWidget";
 import { ThreeHeroScene } from "@/components/ui/ThreeHeroScene";
 import { Vault3DProp } from "@/components/ui/FinancialProps";
+import { CashflowIntroScreen } from "@/components/ui/CashflowIntroScreen";
 import { TransactionModal } from "@/components/modals/TransactionModal";
 import { Button } from "@/components/ui/Button";
 import { triggerConfetti } from "@/lib/confetti";
@@ -26,6 +27,7 @@ import {
   Zap,
   BrainCircuit,
   Wifi,
+  Play,
 } from "lucide-react";
 
 export default function DashboardPage() {
@@ -35,7 +37,29 @@ export default function DashboardPage() {
   const [quickAddOpen, setQuickAddOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [liveCounter, setLiveCounter] = useState(48219450);
+  const [showIntro, setShowIntro] = useState(false);
   const { formatMoney } = useCurrency();
+
+  // Check if first-time visit in this session
+  useEffect(() => {
+    try {
+      const seen = sessionStorage.getItem("cashflow_intro_seen");
+      if (!seen) {
+        setShowIntro(true);
+      }
+    } catch (_) {}
+  }, []);
+
+  const handleIntroBegin = () => {
+    setShowIntro(false);
+    try {
+      sessionStorage.setItem("cashflow_intro_seen", "true");
+    } catch (_) {}
+  };
+
+  const handleReplayIntro = () => {
+    setShowIntro(true);
+  };
 
   const fetchDashboard = useCallback(async () => {
     setLoading(true);
@@ -161,6 +185,14 @@ export default function DashboardPage() {
                 >
                   <Plus className="w-5 h-5 text-emerald-500 stroke-[2.5]" />
                   <span>Simulate Salary Drop</span>
+                </button>
+
+                <button
+                  onClick={handleReplayIntro}
+                  className="inline-flex items-center gap-2 px-6 py-4 rounded-2xl font-display font-bold text-base text-amber-700 dark:text-amber-300 glass-panel hover:bg-amber-500/10 hover:-translate-y-0.5 active:translate-y-0 transition-all border border-amber-400/40 shadow-md"
+                >
+                  <Play className="w-4 h-4 text-amber-500 fill-amber-500" />
+                  <span>Intro Screen</span>
                 </button>
               </div>
 
@@ -314,6 +346,12 @@ export default function DashboardPage() {
           triggerConfetti();
           fetchDashboard();
         }}
+      />
+
+      {/* Cinematic Golden Cashflow Intro Overlay */}
+      <CashflowIntroScreen
+        isOpen={showIntro}
+        onBegin={handleIntroBegin}
       />
     </AppShell>
   );

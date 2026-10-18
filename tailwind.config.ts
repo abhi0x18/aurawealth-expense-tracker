@@ -13,6 +13,8 @@ const config: Config = {
         sans: ["'Plus Jakarta Sans'", "Inter", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
         display: ["Outfit", "'Plus Jakarta Sans'", "sans-serif"],
         mono: ["'Space Grotesk'", "'JetBrains Mono'", "monospace"],
+        cinzel: ["Cinzel", "serif"],
+        montserrat: ["Montserrat", "sans-serif"],
       },
       fontSize: {
         xs: ["0.875rem", { lineHeight: "1.25rem" }], // 14px (boosted from 12px)
