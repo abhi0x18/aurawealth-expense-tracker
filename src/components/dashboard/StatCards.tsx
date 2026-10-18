@@ -33,7 +33,7 @@ export function StatCards({ overview }: StatCardsProps) {
         <div className="tilt-glare" />
         <div className="tilt-inner relative z-10">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+            <span className="text-sm font-display font-extrabold uppercase tracking-wider text-slate-700 dark:text-slate-300">
               Total Inflow
             </span>
             <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-500/25 to-teal-500/15 border border-emerald-500/35 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shadow-inner group-hover:scale-115 group-hover:rotate-6 transition-all duration-300">
@@ -42,13 +42,13 @@ export function StatCards({ overview }: StatCardsProps) {
           </div>
 
           <div className="mt-4">
-            <div className="text-3xl sm:text-4xl font-black font-mono text-slate-900 dark:text-white tracking-tight">
+            <div className="text-3xl sm:text-4xl lg:text-[2.5rem] font-black font-mono text-slate-900 dark:text-white tracking-tight leading-none">
               <AnimatedCounter valuePaise={overview.totalIncomePaise} />
             </div>
-            <div className="flex items-center gap-2 mt-3 text-xs font-semibold">
+            <div className="flex items-center gap-2 mt-3.5 text-sm font-semibold">
               {overview.incomeChangePct !== undefined ? (
                 <span
-                  className={`inline-flex items-center gap-1 px-3 py-1 rounded-full font-mono text-xs font-bold ${
+                  className={`inline-flex items-center gap-1 px-3 py-1 rounded-full font-mono text-xs font-black ${
                     overview.incomeChangePct >= 0
                       ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/25"
                       : "bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/25"
@@ -62,8 +62,8 @@ export function StatCards({ overview }: StatCardsProps) {
                   {Math.abs(overview.incomeChangePct).toFixed(1)}% vs last mo
                 </span>
               ) : (
-                <span className="text-slate-400 dark:text-slate-500 font-medium flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
+                <span className="text-slate-600 dark:text-slate-300 font-semibold flex items-center gap-1.5 text-xs">
+                  <Sparkles className="w-4 h-4 text-emerald-400 animate-pulse" />
                   Active inflow cycle
                 </span>
               )}
@@ -77,7 +77,7 @@ export function StatCards({ overview }: StatCardsProps) {
         <div className="tilt-glare" />
         <div className="tilt-inner relative z-10">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+            <span className="text-sm font-display font-extrabold uppercase tracking-wider text-slate-700 dark:text-slate-300">
               Total Outflow
             </span>
             <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-rose-500/25 to-red-500/15 border border-rose-500/35 text-rose-600 dark:text-rose-400 flex items-center justify-center shadow-inner group-hover:scale-115 group-hover:-rotate-6 transition-all duration-300">
@@ -86,13 +86,13 @@ export function StatCards({ overview }: StatCardsProps) {
           </div>
 
           <div className="mt-4">
-            <div className="text-3xl sm:text-4xl font-black font-mono text-slate-900 dark:text-white tracking-tight">
+            <div className="text-3xl sm:text-4xl lg:text-[2.5rem] font-black font-mono text-slate-900 dark:text-white tracking-tight leading-none">
               <AnimatedCounter valuePaise={overview.totalExpensePaise} />
             </div>
-            <div className="flex items-center gap-2 mt-3 text-xs font-semibold">
+            <div className="flex items-center gap-2 mt-3.5 text-sm font-semibold">
               {overview.expenseChangePct !== undefined ? (
                 <span
-                  className={`inline-flex items-center gap-1 px-3 py-1 rounded-full font-mono text-xs font-bold ${
+                  className={`inline-flex items-center gap-1 px-3 py-1 rounded-full font-mono text-xs font-black ${
                     overview.expenseChangePct <= 0
                       ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/25"
                       : "bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/25"
@@ -106,7 +106,7 @@ export function StatCards({ overview }: StatCardsProps) {
                   {Math.abs(overview.expenseChangePct).toFixed(1)}% vs last mo
                 </span>
               ) : (
-                <span className="text-slate-400 dark:text-slate-500 font-medium">Outflow this period</span>
+                <span className="text-slate-600 dark:text-slate-300 font-semibold text-xs">Outflow this period</span>
               )}
             </div>
           </div>
@@ -118,7 +118,7 @@ export function StatCards({ overview }: StatCardsProps) {
         <div className="tilt-glare" />
         <div className="tilt-inner relative z-10">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+            <span className="text-sm font-display font-extrabold uppercase tracking-wider text-slate-700 dark:text-slate-300">
               Net Cash Flow
             </span>
             <div
@@ -134,7 +134,7 @@ export function StatCards({ overview }: StatCardsProps) {
 
           <div className="mt-4">
             <div
-              className={`text-3xl sm:text-4xl font-black font-mono tracking-tight ${
+              className={`text-3xl sm:text-4xl lg:text-[2.5rem] font-black font-mono tracking-tight leading-none ${
                 isNetPositive
                   ? "text-emerald-600 dark:text-emerald-400"
                   : "text-rose-600 dark:text-rose-400"
@@ -142,7 +142,7 @@ export function StatCards({ overview }: StatCardsProps) {
             >
               <AnimatedCounter valuePaise={overview.netCashFlowPaise} showSign />
             </div>
-            <div className="mt-3 text-xs font-medium text-slate-500 dark:text-slate-400">
+            <div className="mt-3.5 text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300">
               {isNetPositive ? "✨ Surplus retained in vault" : "⚠️ Outpacing current income"}
             </div>
           </div>
@@ -154,7 +154,7 @@ export function StatCards({ overview }: StatCardsProps) {
         <div className="tilt-glare" />
         <div className="tilt-inner relative z-10">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+            <span className="text-sm font-display font-extrabold uppercase tracking-wider text-slate-700 dark:text-slate-300">
               Total Net Worth
             </span>
             <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-500/25 to-indigo-500/15 border border-blue-500/35 text-blue-600 dark:text-blue-400 flex items-center justify-center shadow-inner group-hover:scale-115 group-hover:rotate-12 transition-all duration-300">
@@ -163,10 +163,10 @@ export function StatCards({ overview }: StatCardsProps) {
           </div>
 
           <div className="mt-4">
-            <div className="text-3xl sm:text-4xl font-black font-mono text-slate-900 dark:text-white tracking-tight">
+            <div className="text-3xl sm:text-4xl lg:text-[2.5rem] font-black font-mono text-slate-900 dark:text-white tracking-tight leading-none">
               <AnimatedCounter valuePaise={overview.totalBalancePaise} />
             </div>
-            <div className="mt-3 text-xs font-medium text-slate-500 dark:text-slate-400">
+            <div className="mt-3.5 text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300">
               Across active bank & cash vaults
             </div>
           </div>

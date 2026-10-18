@@ -2,12 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  font-size: 16.5px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
 :root {
   --background: #f8fafc;
   --foreground: #0f172a;
   --bg-primary: #f8fafc;
-  --bg-card: rgba(255, 255, 255, 0.85);
-  --border-glass: rgba(226, 232, 240, 0.85);
+  --bg-card: rgba(255, 255, 255, 0.88);
+  --border-glass: rgba(226, 232, 240, 0.9);
   --text-main: #0f172a;
   --shadow-ambient: 0 20px 50px -12px rgba(15, 23, 42, 0.08);
 }
@@ -16,23 +23,24 @@
   --background: #070b14;
   --foreground: #f8fafc;
   --bg-primary: #070b14;
-  --bg-card: rgba(15, 23, 42, 0.75);
-  --border-glass: rgba(255, 255, 255, 0.1);
+  --bg-card: rgba(15, 23, 42, 0.82);
+  --border-glass: rgba(255, 255, 255, 0.12);
   --text-main: #f8fafc;
-  --shadow-ambient: 0 20px 50px -12px rgba(0, 0, 0, 0.5);
+  --shadow-ambient: 0 20px 50px -12px rgba(0, 0, 0, 0.6);
 }
 
 body {
   color: var(--text-main);
   background-color: var(--bg-primary);
   min-height: 100vh;
-  font-family: 'Urbanist', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 15px; /* Boosted base readability */
+  font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 1rem;
+  font-weight: 500; /* Solid medium weight for crystal clear visibility */
   line-height: 1.6;
+  letter-spacing: -0.011em;
   overflow-x: hidden;
   transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s ease;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-  -webkit-font-smoothing: antialiased;
 }
 
 /* Ambient Animated Spatial Mesh Gradient */
@@ -216,6 +224,25 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(100, 116, 139, 0.6);
+}
+
+/* High-Contrast Font Legibility Enhancements */
+.dark .text-slate-400,
+html.dark .text-slate-400 {
+  color: #cbd5e1; /* Boosted to slate-300 level brightness for crisp readability */
+}
+
+.dark .text-slate-500,
+html.dark .text-slate-500 {
+  color: #94a3b8; /* Boosted to slate-400 level brightness */
+}
+
+h1, h2, h3, h4, h5, h6 {
+  letter-spacing: -0.02em;
+}
+
+.glass-panel {
+  text-rendering: optimizeLegibility;
 }
 
 .dark ::-webkit-scrollbar-thumb {

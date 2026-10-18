@@ -89,7 +89,7 @@ export function CreditCardVisualizer({
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-white/15 backdrop-blur-md border border-white/15 text-white">
+            <span className="text-xs font-mono font-black uppercase tracking-wider px-3.5 py-1 rounded-full bg-white/20 backdrop-blur-md border border-white/25 text-white shadow-sm">
               {type}
             </span>
           </div>
@@ -97,10 +97,10 @@ export function CreditCardVisualizer({
 
         {/* Card Middle: Available Balance */}
         <div className="my-auto relative z-10" style={{ transform: "translateZ(35px)" }}>
-          <p className="text-xs font-semibold text-white/70 uppercase tracking-wider mb-1">
+          <p className="text-sm font-bold text-white/90 uppercase tracking-wider mb-1">
             Current Balance
           </p>
-          <h3 className="text-3xl sm:text-4xl font-mono font-black tracking-tight text-white drop-shadow-lg">
+          <h3 className="text-3xl sm:text-4xl font-mono font-black tracking-tight text-white drop-shadow-xl">
             <AnimatedCounter valuePaise={balancePaise} />
           </h3>
         </div>
@@ -108,10 +108,10 @@ export function CreditCardVisualizer({
         {/* Card Footer: Account Number & Cardholder / Bank */}
         <div className="flex items-end justify-between relative z-10" style={{ transform: "translateZ(20px)" }}>
           <div>
-            <p className="text-sm font-mono font-bold tracking-widest text-white/80">
+            <p className="text-base font-mono font-black tracking-widest text-white/95">
               •••• •••• •••• {accountNumber.slice(-4)}
             </p>
-            <p className="text-sm font-display font-extrabold text-white uppercase tracking-wider mt-1 truncate max-w-[190px]">
+            <p className="text-base font-display font-black text-white uppercase tracking-wider mt-1 truncate max-w-[200px]">
               {name}
             </p>
           </div>
@@ -128,14 +128,14 @@ export function CreditCardVisualizer({
 
       {/* Quick Action Pills underneath */}
       {(onTransferClick || onAddTransactionClick) && (
-        <div className="flex items-center justify-center gap-2.5 mt-3.5">
+        <div className="flex items-center justify-center gap-3 mt-4">
           {onTransferClick && (
             <button
               type="button"
               onClick={onTransferClick}
-              className="text-xs font-bold px-4 py-2 rounded-full bg-slate-800/80 hover:bg-emerald-600 text-slate-200 hover:text-white border border-slate-700/60 transition-all flex items-center gap-1.5 shadow-md active:scale-95"
+              className="text-sm font-bold px-4 py-2 rounded-full bg-slate-800/90 hover:bg-emerald-600 text-slate-100 hover:text-white border border-slate-700/70 transition-all flex items-center gap-1.5 shadow-md active:scale-95"
             >
-              <ArrowUpRight className="w-3.5 h-3.5" />
+              <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
               Transfer
             </button>
           )}
@@ -143,9 +143,9 @@ export function CreditCardVisualizer({
             <button
               type="button"
               onClick={onAddTransactionClick}
-              className="text-xs font-bold px-4 py-2 rounded-full bg-slate-800/80 hover:bg-emerald-600 text-slate-200 hover:text-white border border-slate-700/60 transition-all flex items-center gap-1.5 shadow-md active:scale-95"
+              className="text-sm font-bold px-4 py-2 rounded-full bg-slate-800/90 hover:bg-emerald-600 text-slate-100 hover:text-white border border-slate-700/70 transition-all flex items-center gap-1.5 shadow-md active:scale-95"
             >
-              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+              <Sparkles className="w-4 h-4 text-amber-300 stroke-[2.5]" />
               Record
             </button>
           )}

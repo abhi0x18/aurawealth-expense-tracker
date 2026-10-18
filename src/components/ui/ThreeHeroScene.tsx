@@ -297,20 +297,20 @@ export function ThreeHeroScene() {
   return (
     <div className="relative w-full h-[470px] sm:h-[520px] flex items-center justify-center">
       {/* Interactive Hint Pill with glowing pulse */}
-      <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20 px-4 py-1.5 rounded-full glass-panel text-xs font-mono font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-2 pointer-events-none shadow-lg border border-emerald-500/30">
+      <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20 px-5 py-2 rounded-full glass-panel text-xs sm:text-sm font-mono font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2 pointer-events-none shadow-lg border border-emerald-500/35">
         <MousePointerClick className="w-4 h-4 text-emerald-400 animate-bounce" />
-        <span>Hover to tilt in 3D • Click card for impulse spin</span>
+        <span>Hover to tilt 3D card • Click for impulse spin</span>
       </div>
 
       {/* Floating Micro-Widget 1: Top Left Savings Badge with gentle hover glow */}
       <div className="absolute top-12 left-2 sm:left-4 z-20 glass-panel rounded-2xl p-4 shadow-2xl border border-emerald-500/35 animate-float-slow pointer-events-none">
         <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-white flex items-center justify-center shadow-lg shadow-emerald-500/35">
+          <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-white flex items-center justify-center shadow-lg shadow-emerald-500/35 shrink-0">
             <TrendingUp className="w-5 h-5 stroke-[2.5]" />
           </div>
           <div>
-            <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Monthly Saved</p>
-            <p className="font-mono font-extrabold text-lg text-emerald-600 dark:text-emerald-400">
+            <p className="text-xs font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Monthly Saved</p>
+            <p className="font-mono font-black text-xl text-emerald-600 dark:text-emerald-400">
               +{formatMoney(3840000)}
             </p>
           </div>
@@ -320,13 +320,13 @@ export function ThreeHeroScene() {
       {/* Floating Micro-Widget 2: Bottom Right Budget Health */}
       <div className="absolute bottom-8 right-2 sm:right-4 z-20 glass-panel rounded-2xl p-4 shadow-2xl border border-indigo-500/35 animate-float-delayed pointer-events-none">
         <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 text-white flex items-center justify-center shadow-lg shadow-indigo-500/35">
+          <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 text-white flex items-center justify-center shadow-lg shadow-indigo-500/35 shrink-0">
             <Coffee className="w-5 h-5 stroke-[2.5]" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Dining & Coffee</p>
-              <span className="text-[11px] font-mono font-extrabold text-emerald-600 dark:text-emerald-400">84% Optimal</span>
+              <p className="text-xs font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Dining & Coffee</p>
+              <span className="text-xs font-mono font-black text-emerald-600 dark:text-emerald-400">84% Optimal</span>
             </div>
             <div className="w-32 h-2.5 bg-slate-200 dark:bg-slate-700/80 rounded-full overflow-hidden mt-2 p-0.5 shadow-inner">
               <div

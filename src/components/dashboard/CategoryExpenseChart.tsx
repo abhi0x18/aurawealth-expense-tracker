@@ -58,13 +58,15 @@ export function CategoryExpenseChart({ categories }: CategoryExpenseChartProps) 
   }
 
   return (
-    <Card className="flex flex-col h-full">
-      <div className="flex items-center justify-between mb-2">
+    <Card className="flex flex-col h-full rounded-3xl p-6 border border-slate-200/80 dark:border-white/10 shadow-xl">
+      <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">
+          <h3 className="text-xl font-display font-black text-slate-900 dark:text-white">
             Expenses by Category
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400">Where your money goes</p>
+          <p className="text-sm font-semibold text-slate-600 dark:text-slate-300 mt-1">
+            Where your capital flows
+          </p>
         </div>
       </div>
 
@@ -94,19 +96,19 @@ export function CategoryExpenseChart({ categories }: CategoryExpenseChartProps) 
       </div>
 
       {/* Top 4 Categories Legend */}
-      <div className="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+      <div className="grid grid-cols-2 gap-3 mt-3 pt-3 border-t border-slate-200/80 dark:border-white/10">
         {categories.slice(0, 4).map((c, i) => {
           const pct = totalExpense > 0 ? Math.round((c.amount / totalExpense) * 100) : 0;
           return (
-            <div key={c.name} className="flex items-center gap-2 text-xs">
+            <div key={c.name} className="flex items-center gap-2.5 text-sm">
               <span
-                className="w-2.5 h-2.5 rounded-full shrink-0"
+                className="w-3 h-3 rounded-full shrink-0 shadow-sm"
                 style={{ backgroundColor: c.color || DEFAULT_COLORS[i % DEFAULT_COLORS.length] }}
               />
-              <span className="truncate text-slate-600 dark:text-slate-400 font-medium">
+              <span className="truncate text-slate-700 dark:text-slate-200 font-bold">
                 {c.name}
               </span>
-              <span className="ml-auto font-bold text-slate-800 dark:text-slate-200">{pct}%</span>
+              <span className="ml-auto font-mono font-black text-slate-900 dark:text-white">{pct}%</span>
             </div>
           );
         })}

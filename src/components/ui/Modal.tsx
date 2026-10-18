@@ -46,9 +46,9 @@ export function Modal({
       >
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800">
           <div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">{title}</h3>
+            <h3 className="text-xl font-display font-black text-slate-900 dark:text-white">{title}</h3>
             {description && (
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{description}</p>
+              <p className="text-sm font-medium text-slate-600 dark:text-slate-300 mt-1">{description}</p>
             )}
           </div>
           <button

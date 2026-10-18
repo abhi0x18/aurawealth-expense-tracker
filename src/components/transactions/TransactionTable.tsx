@@ -79,7 +79,7 @@ export function TransactionTable({
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-slate-50/80 dark:bg-slate-900/60 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider border-b border-slate-200/70 dark:border-white/10">
+            <tr className="bg-slate-50/80 dark:bg-slate-900/60 text-sm font-extrabold text-slate-700 dark:text-slate-200 uppercase tracking-wider border-b border-slate-200/70 dark:border-white/10">
               <th className="py-4 px-5">Type</th>
               <th className="py-4 px-5">Date</th>
               <th className="py-4 px-5">Description / Merchant</th>
@@ -89,10 +89,10 @@ export function TransactionTable({
               <th className="py-4 px-5 text-center">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100 dark:divide-slate-800/80 text-sm">
+          <tbody className="divide-y divide-slate-100 dark:divide-slate-800/80 text-base">
             {transactions.length === 0 ? (
               <tr>
-                <td colSpan={7} className="py-16 text-center text-slate-400 text-sm font-medium">
+                <td colSpan={7} className="py-16 text-center text-slate-500 text-base font-semibold">
                   No transactions found matching your criteria.
                 </td>
               </tr>
@@ -110,19 +110,19 @@ export function TransactionTable({
                     {/* Type Badge */}
                     <td className="py-4 px-5 whitespace-nowrap">
                       {isExpense && (
-                        <Badge variant="danger" size="sm" className="font-mono font-bold text-xs px-2.5 py-1">
+                        <Badge variant="danger" size="sm" className="font-mono font-black text-xs px-2.5 py-1">
                           <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5]" />
                           Expense
                         </Badge>
                       )}
                       {isIncome && (
-                        <Badge variant="success" size="sm" className="font-mono font-bold text-xs px-2.5 py-1">
+                        <Badge variant="success" size="sm" className="font-mono font-black text-xs px-2.5 py-1">
                           <ArrowDownLeft className="w-3.5 h-3.5 stroke-[2.5]" />
                           Income
                         </Badge>
                       )}
                       {isTransfer && (
-                        <Badge variant="info" size="sm" className="font-mono font-bold text-xs px-2.5 py-1">
+                        <Badge variant="info" size="sm" className="font-mono font-black text-xs px-2.5 py-1">
                           <ArrowLeftRight className="w-3.5 h-3.5 stroke-[2.5]" />
                           Transfer
                         </Badge>
@@ -130,24 +130,24 @@ export function TransactionTable({
                     </td>
 
                     {/* Date */}
-                    <td className="py-4 px-5 whitespace-nowrap font-medium text-slate-600 dark:text-slate-300">
+                    <td className="py-4 px-5 whitespace-nowrap font-bold text-slate-700 dark:text-slate-200">
                       {formatDate(tx.date)}
                     </td>
 
                     {/* Merchant / Description */}
                     <td className="py-4 px-5 max-w-xs truncate">
-                      <span className="font-bold text-slate-900 dark:text-white">
+                      <span className="font-extrabold text-slate-900 dark:text-white">
                         {tx.merchant || (isTransfer ? "Account Transfer" : tx.category?.name || "Transaction")}
                       </span>
                       {tx.notes && (
-                        <p className="text-xs text-slate-400 truncate mt-0.5">{tx.notes}</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-300 truncate mt-0.5 font-medium">{tx.notes}</p>
                       )}
                     </td>
 
                     {/* Category */}
                     <td className="py-4 px-5 whitespace-nowrap">
                       {tx.category ? (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800/80 text-slate-800 dark:text-slate-200 text-xs font-semibold">
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-100 dark:bg-slate-800/80 text-slate-900 dark:text-white text-xs font-bold">
                           {tx.category.color && (
                             <span
                               className="w-2.5 h-2.5 rounded-full"
@@ -157,7 +157,7 @@ export function TransactionTable({
                           {tx.category.name}
                         </span>
                       ) : (
-                        <span className="text-slate-400 text-xs">
+                        <span className="text-slate-500 dark:text-slate-400 text-xs font-medium">
                           {isTransfer ? "—" : "Uncategorized"}
                         </span>
                       )}
@@ -165,10 +165,10 @@ export function TransactionTable({
 
                     {/* Account */}
                     <td className="py-4 px-5 whitespace-nowrap">
-                      <div className="text-slate-700 dark:text-slate-300 font-semibold">
+                      <div className="text-slate-800 dark:text-slate-100 font-bold">
                         {tx.account?.name}
                         {isTransfer && tx.toAccount && (
-                          <span className="text-slate-400 font-normal"> → {tx.toAccount.name}</span>
+                          <span className="text-slate-500 dark:text-slate-300 font-medium"> → {tx.toAccount.name}</span>
                         )}
                       </div>
                     </td>
@@ -176,12 +176,12 @@ export function TransactionTable({
                     {/* Amount */}
                     <td className="py-4 px-5 text-right whitespace-nowrap">
                       <span
-                        className={`font-mono font-black text-base tracking-tight ${
+                        className={`font-mono font-black text-lg tracking-tight ${
                           isExpense
                             ? "text-rose-600 dark:text-rose-400"
                             : isIncome
                             ? "text-emerald-600 dark:text-emerald-400"
-                            : "text-slate-700 dark:text-slate-300"
+                            : "text-slate-800 dark:text-slate-200"
                         }`}
                       >
                         {isExpense ? "-" : isIncome ? "+" : ""}
@@ -195,7 +195,7 @@ export function TransactionTable({
                         <button
                           onClick={() => onEdit(tx)}
                           title="Edit transaction"
-                          className="p-2 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                          className="p-2 text-slate-500 hover:text-slate-800 dark:hover:text-slate-100 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                         >
                           <Edit2 className="w-4 h-4" />
                         </button>
@@ -203,7 +203,7 @@ export function TransactionTable({
                           onClick={() => confirmDelete(tx.id)}
                           disabled={deletingId === tx.id}
                           title="Delete transaction"
-                          className="p-2 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
+                          className="p-2 text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -219,10 +219,10 @@ export function TransactionTable({
 
       {/* Pagination Footer */}
       {pagination.totalPages > 1 && (
-        <div className="p-5 border-t border-slate-200/70 dark:border-white/10 flex items-center justify-between text-sm text-slate-500">
+        <div className="p-5 border-t border-slate-200/70 dark:border-white/10 flex items-center justify-between text-sm sm:text-base text-slate-600 dark:text-slate-300 font-medium">
           <span>
-            Page <span className="font-mono font-bold text-slate-900 dark:text-white">{pagination.page}</span> of{" "}
-            <span className="font-mono font-bold text-slate-900 dark:text-white">{pagination.totalPages}</span>
+            Page <span className="font-mono font-extrabold text-slate-900 dark:text-white">{pagination.page}</span> of{" "}
+            <span className="font-mono font-extrabold text-slate-900 dark:text-white">{pagination.totalPages}</span>
           </span>
           <div className="flex items-center gap-2">
             <button

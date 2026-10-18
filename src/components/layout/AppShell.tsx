@@ -75,7 +75,7 @@ export function AppShell({ children, user }: AppShellProps) {
         />
 
         {/* Main Content Area */}
-        <div className="flex-1 lg:pl-64 flex flex-col min-w-0 min-h-screen relative z-10">
+        <div className="flex-1 lg:pl-72 flex flex-col min-w-0 min-h-screen relative z-10">
           <Header
             onOpenMobileMenu={() => setMobileMenuOpen(true)}
             onOpenQuickAdd={() => setQuickAddOpen(true)}

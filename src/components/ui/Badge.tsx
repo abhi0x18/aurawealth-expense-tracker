@@ -28,8 +28,8 @@ export function Badge({
   };
 
   const sizes = {
-    sm: "px-2 py-0.5 text-xs font-medium rounded-md",
-    md: "px-2.5 py-1 text-xs font-semibold rounded-lg",
+    sm: "px-2.5 py-1 text-xs font-bold rounded-lg",
+    md: "px-3 py-1.5 text-xs sm:text-sm font-extrabold rounded-xl",
   };
 
   return (
