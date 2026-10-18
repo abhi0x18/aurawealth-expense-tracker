@@ -82,8 +82,8 @@ const config: Config = {
           "50%": { opacity: "1", transform: "scale(1.08)" },
         },
         shimmer: {
-          "0%": { transform: "translateX(-100%)" },
-          "100%": { transform: "translateX(200%)" },
+          "0%": { "background-position": "-200% 0" },
+          "100%": { "background-position": "200% 0" },
         },
         gradientFlow: {
           "0%, 100%": { "background-size": "200% 200%", "background-position": "left center" },

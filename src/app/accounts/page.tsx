@@ -178,7 +178,7 @@ export default function AccountsPage() {
         )}
 
         {/* 3D Total Net Balance Banner with Vault Prop */}
-        <div className="relative rounded-3xl p-8 sm:p-10 bg-gradient-to-r from-emerald-950 via-teal-950 to-slate-950 border border-emerald-500/30 shadow-2xl overflow-hidden animate-shimmer">
+        <div className="relative rounded-3xl p-8 sm:p-10 bg-gradient-to-r from-emerald-950 via-teal-950 to-slate-950 border border-emerald-500/30 shadow-2xl overflow-hidden">
           {/* Ambient Glow Orbs */}
           <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none" />
 

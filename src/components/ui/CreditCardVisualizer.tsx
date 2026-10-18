@@ -61,7 +61,7 @@ export function CreditCardVisualizer({
       onMouseLeave={handleMouseLeave}
     >
       <div
-        className={`relative h-60 rounded-3xl p-6 bg-gradient-to-tr ${themeStyles} border shadow-2xl transition-transform duration-200 ease-out flex flex-col justify-between overflow-hidden animate-shimmer`}
+        className={`relative h-60 rounded-3xl p-6 bg-gradient-to-tr ${themeStyles} border shadow-2xl transition-transform duration-200 ease-out flex flex-col justify-between overflow-hidden`}
         style={{
           transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
           transformStyle: "preserve-3d",

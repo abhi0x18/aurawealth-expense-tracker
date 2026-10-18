@@ -120,7 +120,7 @@ export default function BudgetsPage() {
 
         {/* Overall Monthly Budget 3D Card */}
         {overallBudget && (
-          <div className="relative rounded-3xl p-8 sm:p-10 bg-gradient-to-r from-slate-900 via-slate-950 to-slate-900 border border-slate-700/60 shadow-2xl overflow-hidden animate-shimmer">
+          <div className="relative rounded-3xl p-8 sm:p-10 bg-gradient-to-r from-slate-900 via-slate-950 to-slate-900 border border-slate-700/60 shadow-2xl overflow-hidden">
             <div
               className={`absolute top-0 right-0 w-96 h-96 rounded-full blur-3xl pointer-events-none ${
                 overallBudget.isOverBudget

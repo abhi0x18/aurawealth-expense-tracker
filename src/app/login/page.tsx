@@ -172,7 +172,7 @@ export default function LoginPage() {
         <Vault3DProp className="w-48 h-48" />
       </div>
 
-      <div className="w-full max-w-md bg-slate-900/80 backdrop-blur-3xl border border-white/10 rounded-3xl p-8 sm:p-10 shadow-2xl relative z-10 animate-shimmer overflow-hidden">
+      <div className="w-full max-w-md bg-slate-900/80 backdrop-blur-3xl border border-white/10 rounded-3xl p-8 sm:p-10 shadow-2xl relative z-10 overflow-hidden">
         {/* Specular Top Glow Line */}
         <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-emerald-400 to-transparent pointer-events-none" />
 

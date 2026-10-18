@@ -108,7 +108,7 @@ export default function GoalsPage() {
         </div>
 
         {/* 3D Milestone Overview Banner with Target3DProp */}
-        <div className="relative rounded-3xl p-8 sm:p-10 bg-gradient-to-r from-blue-950 via-indigo-950 to-slate-950 border border-blue-500/30 shadow-2xl overflow-hidden animate-shimmer">
+        <div className="relative rounded-3xl p-8 sm:p-10 bg-gradient-to-r from-blue-950 via-indigo-950 to-slate-950 border border-blue-500/30 shadow-2xl overflow-hidden">
           <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl pointer-events-none" />
 
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative z-10">
