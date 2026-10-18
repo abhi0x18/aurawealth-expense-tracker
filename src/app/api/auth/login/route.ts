@@ -27,6 +27,13 @@ export async function POST(req: Request) {
       );
     }
 
+    if (!user.passwordHash) {
+      return NextResponse.json(
+        { error: "This account was registered via Email OTP. Please sign in using the Email OTP tab." },
+        { status: 400 }
+      );
+    }
+
     const isValid = await verifyPassword(validated.password, user.passwordHash);
     if (!isValid) {
       return NextResponse.json(

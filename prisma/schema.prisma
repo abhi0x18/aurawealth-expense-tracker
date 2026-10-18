@@ -11,7 +11,7 @@ model User {
   id                   String                @id @default(cuid())
   name                 String
   email                String                @unique
-  passwordHash         String
+  passwordHash         String?
   currency             String                @default("INR")
   currencySymbol       String                @default("₹")
   timezone             String                @default("Asia/Kolkata")
@@ -203,3 +203,14 @@ model ImportHistory {
   errorCount     Int
   importedAt     DateTime @default(now())
 }
+
+model VerificationToken {
+  id        String   @id @default(cuid())
+  email     String
+  otp       String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([email])
+}
+

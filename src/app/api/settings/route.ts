@@ -56,9 +56,11 @@ export async function POST(req: Request) {
       const validated = ChangePasswordSchema.parse(body);
       const userRecord = await db.user.findUniqueOrThrow({ where: { id: user.id } });
 
-      const isValid = await verifyPassword(validated.currentPassword, userRecord.passwordHash);
-      if (!isValid) {
-        return NextResponse.json({ error: "Incorrect current password" }, { status: 400 });
+      if (userRecord.passwordHash) {
+        const isValid = await verifyPassword(validated.currentPassword, userRecord.passwordHash);
+        if (!isValid) {
+          return NextResponse.json({ error: "Incorrect current password" }, { status: 400 });
+        }
       }
 
       const newHash = await hashPassword(validated.newPassword);
@@ -74,9 +76,11 @@ export async function POST(req: Request) {
       const { confirmPassword } = body;
       const userRecord = await db.user.findUniqueOrThrow({ where: { id: user.id } });
 
-      const isValid = await verifyPassword(confirmPassword, userRecord.passwordHash);
-      if (!isValid) {
-        return NextResponse.json({ error: "Incorrect password. Data reset aborted." }, { status: 400 });
+      if (userRecord.passwordHash) {
+        const isValid = await verifyPassword(confirmPassword, userRecord.passwordHash);
+        if (!isValid) {
+          return NextResponse.json({ error: "Incorrect password. Data reset aborted." }, { status: 400 });
+        }
       }
 
       // Wipe financial data transactionally
