@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import nodemailer from "nodemailer";
 
 export interface SendOtpResult {
   success: boolean;
@@ -6,6 +7,25 @@ export interface SendOtpResult {
   message: string;
   devOtp?: string;
   resendId?: string;
+  provider?: "gmail" | "resend" | "simulated";
+}
+
+/**
+ * Returns an instantiated Nodemailer Gmail transporter if SMTP_USER and SMTP_PASS are set.
+ * This is the easiest way to send real emails to ANY address without owning a domain.
+ */
+function getSmtpTransporter() {
+  const user = process.env.SMTP_USER;
+  const pass = process.env.SMTP_PASS;
+  if (!user || !pass || user.trim() === "" || pass.trim() === "") return null;
+
+  return nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: user.trim(),
+      pass: pass.trim().replace(/\s+/g, ""), // removes spaces in Google App Password
+    },
+  });
 }
 
 /**
@@ -18,11 +38,11 @@ function getResendClient(): Resend | null {
 }
 
 /**
- * Sends a 6-digit verification OTP to the user's email using Resend.
+ * Sends a 6-digit verification OTP to the user's email.
+ * Prioritizes Gmail SMTP (can send to anyone without a domain), then Resend, then Dev simulation.
  */
 export async function sendOtpEmail(email: string, otp: string, userName?: string): Promise<SendOtpResult> {
   const greeting = userName ? `Hello ${userName},` : "Hello,";
-  const resend = getResendClient();
   const fromEmail = process.env.RESEND_FROM_EMAIL || "PaisaPilot <onboarding@resend.dev>";
   
   // HTML Template for OTP Email
@@ -63,6 +83,31 @@ export async function sendOtpEmail(email: string, otp: string, userName?: string
     </html>
   `;
 
+  // 1. Try Gmail SMTP first if configured (sends to ANY email address)
+  const smtp = getSmtpTransporter();
+  if (smtp) {
+    try {
+      await smtp.sendMail({
+        from: `"PaisaPilot" <${process.env.SMTP_USER}>`,
+        to: email,
+        subject: `${otp} is your PaisaPilot verification code`,
+        html: htmlContent,
+      });
+
+      console.log(`[Gmail SMTP Sent] Successfully dispatched email to ${email}`);
+      return {
+        success: true,
+        simulated: false,
+        message: `Verification code sent to ${email}`,
+        provider: "gmail",
+      };
+    } catch (smtpErr: any) {
+      console.warn("[Gmail SMTP Warning]:", smtpErr.message);
+    }
+  }
+
+  // 2. Try Resend if configured
+  const resend = getResendClient();
   if (resend) {
     try {
       const response = await resend.emails.send({
@@ -74,7 +119,6 @@ export async function sendOtpEmail(email: string, otp: string, userName?: string
 
       if (response.error) {
         console.warn("[Resend Warning]:", response.error);
-        // Log OTP in console so the developer/user is never blocked
         console.log(`\n===================================================`);
         console.log(`  [PaisaPilot Fallback Dev OTP for ${email}]`);
         console.log(`  OTP Code: ${otp}`);
@@ -84,8 +128,9 @@ export async function sendOtpEmail(email: string, otp: string, userName?: string
         return {
           success: true,
           simulated: true,
-          message: `Resend Notice: ${response.error.message}`,
+          message: `Notice: ${response.error.message}`,
           devOtp: otp,
+          provider: "simulated",
         };
       }
 
@@ -95,30 +140,26 @@ export async function sendOtpEmail(email: string, otp: string, userName?: string
         simulated: false,
         message: `Verification code sent to ${email}`,
         resendId: response.data?.id,
+        provider: "resend",
       };
     } catch (err: any) {
       console.error("[Resend Exception]:", err);
-      return {
-        success: true,
-        simulated: true,
-        message: "Email sending fallback (dev mode)",
-        devOtp: otp,
-      };
     }
-  } else {
-    // Development / No API key provided: simulate delivery in console
-    console.log(`\n===================================================`);
-    console.log(`  [PaisaPilot OTP Service - Development Mode]`);
-    console.log(`  To: ${email}`);
-    console.log(`  OTP Code: ${otp}`);
-    console.log(`  Valid for: 10 minutes`);
-    console.log(`===================================================\n`);
-
-    return {
-      success: true,
-      simulated: true,
-      message: `OTP generated for ${email}. (Logged to server console in dev mode)`,
-      devOtp: otp,
-    };
   }
+
+  // 3. Fallback: Log to console in development
+  console.log(`\n===================================================`);
+  console.log(`  [PaisaPilot OTP Service - Development Mode]`);
+  console.log(`  To: ${email}`);
+  console.log(`  OTP Code: ${otp}`);
+  console.log(`  Valid for: 10 minutes`);
+  console.log(`===================================================\n`);
+
+  return {
+    success: true,
+    simulated: true,
+    message: `OTP generated for ${email}. (Logged to server console in dev mode)`,
+    devOtp: otp,
+    provider: "simulated",
+  };
 }

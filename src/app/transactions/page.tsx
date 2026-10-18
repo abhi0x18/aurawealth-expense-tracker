@@ -6,7 +6,7 @@ import { TransactionTable } from "@/components/transactions/TransactionTable";
 import { TransactionModal } from "@/components/modals/TransactionModal";
 import { CsvImportModal } from "@/components/settings/CsvImportModal";
 import { Button } from "@/components/ui/Button";
-import { Plus, Search, RotateCcw } from "lucide-react";
+import { Plus, Search, RotateCcw, Download, Upload, Filter, Sparkles } from "lucide-react";
 
 export default function TransactionsPage() {
   const [transactions, setTransactions] = useState<any[]>([]);
@@ -110,52 +110,79 @@ export default function TransactionsPage() {
 
   return (
     <AppShell>
-      <div className="space-y-6">
+      <div className="space-y-8">
         {/* Top Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight">
-              Transactions
+            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+              Financial Ledger &amp; Journal
+              <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-bold border border-emerald-500/30">
+                {pagination.totalCount} Entries
+              </span>
             </h1>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              Record, search, filter, and audit every financial movement
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              Search, filter, categorize, and audit transactions with full CSV portability.
             </p>
           </div>
 
-          <Button
-            onClick={() => {
-              setEditingTransaction(null);
-              setModalOpen(true);
-            }}
-            variant="primary"
-            size="md"
-            className="shadow-sm font-semibold rounded-xl"
-          >
-            <Plus className="w-4 h-4" />
-            Add Transaction
-          </Button>
+          <div className="flex items-center gap-2.5">
+            <Button
+              onClick={() => setImportModalOpen(true)}
+              variant="outline"
+              size="md"
+              className="rounded-2xl font-bold border-slate-200 dark:border-white/10"
+            >
+              <Upload className="w-4 h-4" />
+              Import CSV
+            </Button>
+
+            <Button
+              onClick={handleExportCsv}
+              variant="outline"
+              size="md"
+              className="rounded-2xl font-bold border-slate-200 dark:border-white/10"
+            >
+              <Download className="w-4 h-4" />
+              Export
+            </Button>
+
+            <Button
+              onClick={() => {
+                setEditingTransaction(null);
+                setModalOpen(true);
+              }}
+              variant="primary"
+              size="md"
+              className="shadow-lg shadow-emerald-500/25 font-bold rounded-2xl"
+            >
+              <Plus className="w-4 h-4" />
+              Add Transaction
+            </Button>
+          </div>
         </div>
 
-        {/* Filter Controls Bar */}
-        <div className="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs space-y-3">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            {/* Search */}
+        {/* 3D Glass Filter Controls Bar */}
+        <div className="p-5 bg-white/80 dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/80 dark:border-white/10 rounded-3xl shadow-xl space-y-4 relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+            {/* Search Input */}
             <div className="relative">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Search merchant, notes, tags..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 text-slate-900 dark:text-slate-100"
+                className="w-full pl-10 pr-3.5 py-2.5 text-xs bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500/30 text-slate-900 dark:text-white"
               />
             </div>
 
-            {/* Type */}
+            {/* Type Selector */}
             <select
               value={type}
               onChange={(e) => setType(e.target.value)}
-              className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 text-slate-900 dark:text-slate-100"
+              className="w-full px-3.5 py-2.5 text-xs font-semibold bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500/30 text-slate-900 dark:text-white cursor-pointer"
             >
               <option value="ALL">All Types (Income, Expense, Transfer)</option>
               <option value="EXPENSE">Expenses Only</option>
@@ -163,11 +190,11 @@ export default function TransactionsPage() {
               <option value="TRANSFER">Transfers Only</option>
             </select>
 
-            {/* Account */}
+            {/* Account Selector */}
             <select
               value={accountId}
               onChange={(e) => setAccountId(e.target.value)}
-              className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 text-slate-900 dark:text-slate-100"
+              className="w-full px-3.5 py-2.5 text-xs font-semibold bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500/30 text-slate-900 dark:text-white cursor-pointer"
             >
               <option value="">All Accounts</option>
               {accounts.map((a) => (
@@ -177,11 +204,11 @@ export default function TransactionsPage() {
               ))}
             </select>
 
-            {/* Category */}
+            {/* Category Selector */}
             <select
               value={categoryId}
               onChange={(e) => setCategoryId(e.target.value)}
-              className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 text-slate-900 dark:text-slate-100"
+              className="w-full px-3.5 py-2.5 text-xs font-semibold bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500/30 text-slate-900 dark:text-white cursor-pointer"
             >
               <option value="">All Categories</option>
               {categories.map((c) => (
@@ -193,26 +220,26 @@ export default function TransactionsPage() {
           </div>
 
           {/* Date range & Sort options */}
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-100 dark:border-white/5 text-xs font-medium">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-slate-400 font-medium">Date Range:</span>
+              <span className="text-slate-400 font-semibold">Calendar:</span>
               <input
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="px-2.5 py-1 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-300"
+                className="px-3 py-1.5 text-xs bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-white/10 rounded-xl text-slate-700 dark:text-slate-300 font-mono"
               />
               <span className="text-slate-400">to</span>
               <input
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="px-2.5 py-1 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-300"
+                className="px-3 py-1.5 text-xs bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-white/10 rounded-xl text-slate-700 dark:text-slate-300 font-mono"
               />
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-slate-400 font-medium">Sort:</span>
+              <span className="text-slate-400 font-semibold">Order:</span>
               <select
                 value={`${sortBy}-${sortOrder}`}
                 onChange={(e) => {
@@ -220,7 +247,7 @@ export default function TransactionsPage() {
                   setSortBy(by);
                   setSortOrder(ord as "asc" | "desc");
                 }}
-                className="px-2.5 py-1 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-300"
+                className="px-3 py-1.5 text-xs font-semibold bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-white/10 rounded-xl text-slate-700 dark:text-slate-300"
               >
                 <option value="date-desc">Newest First</option>
                 <option value="date-asc">Oldest First</option>
@@ -231,9 +258,9 @@ export default function TransactionsPage() {
               {(search || type !== "ALL" || accountId || categoryId || startDate || endDate) && (
                 <button
                   onClick={handleResetFilters}
-                  className="flex items-center gap-1 text-xs text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 underline ml-2"
+                  className="flex items-center gap-1.5 text-xs font-bold text-emerald-500 hover:text-emerald-400 transition-colors ml-3"
                 >
-                  <RotateCcw className="w-3 h-3" />
+                  <RotateCcw className="w-3.5 h-3.5" />
                   Reset
                 </button>
               )}
@@ -241,7 +268,7 @@ export default function TransactionsPage() {
           </div>
         </div>
 
-        {/* Transactions Table */}
+        {/* Transactions Table Container */}
         <TransactionTable
           transactions={transactions}
           pagination={pagination}

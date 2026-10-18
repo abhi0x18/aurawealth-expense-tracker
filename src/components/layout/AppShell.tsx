@@ -46,7 +46,12 @@ export function AppShell({ children, user }: AppShellProps) {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col lg:flex-row">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#030712] text-slate-900 dark:text-slate-100 flex flex-col lg:flex-row relative overflow-x-hidden bg-grid-pattern">
+      {/* Dynamic 3D Ambient Glowing Mesh Orbs */}
+      <div className="fixed top-[-10%] left-[20%] w-[500px] h-[500px] rounded-full bg-emerald-500/10 dark:bg-emerald-500/8 blur-[120px] pointer-events-none" />
+      <div className="fixed bottom-[-10%] right-[10%] w-[600px] h-[600px] rounded-full bg-blue-500/10 dark:bg-blue-600/6 blur-[140px] pointer-events-none" />
+      <div className="fixed top-[40%] right-[30%] w-[350px] h-[350px] rounded-full bg-purple-500/5 dark:bg-purple-500/5 blur-[100px] pointer-events-none" />
+
       {/* Sidebar */}
       <Sidebar
         isOpen={mobileMenuOpen}
@@ -54,7 +59,7 @@ export function AppShell({ children, user }: AppShellProps) {
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 lg:pl-64 flex flex-col min-w-0 min-h-screen">
+      <div className="flex-1 lg:pl-64 flex flex-col min-w-0 min-h-screen relative z-10">
         <Header
           onOpenMobileMenu={() => setMobileMenuOpen(true)}
           onOpenQuickAdd={() => setQuickAddOpen(true)}
@@ -72,7 +77,6 @@ export function AppShell({ children, user }: AppShellProps) {
         isOpen={quickAddOpen}
         onClose={() => setQuickAddOpen(false)}
         onSuccess={() => {
-          // Trigger page reload / event dispatch so active views refresh
           window.dispatchEvent(new Event("transaction-updated"));
         }}
       />

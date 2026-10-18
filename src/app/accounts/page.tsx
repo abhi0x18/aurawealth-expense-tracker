@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { AccountModal } from "@/components/accounts/AccountModal";
 import { TransferModal } from "@/components/accounts/TransferModal";
+import { CreditCardVisualizer } from "@/components/ui/CreditCardVisualizer";
+import { Vault3DProp } from "@/components/ui/FinancialProps";
 import { formatCurrency } from "@/lib/money";
 import {
   Landmark,
@@ -21,6 +23,7 @@ import {
   Trash2,
   Archive,
   AlertCircle,
+  Sparkles,
 } from "lucide-react";
 
 export default function AccountsPage() {
@@ -66,6 +69,16 @@ export default function AccountsPage() {
     }
   };
 
+  const getThemeForIndex = (index: number): "emerald" | "obsidian" | "sapphire" | "amethyst" => {
+    const themes: ("emerald" | "obsidian" | "sapphire" | "amethyst")[] = [
+      "emerald",
+      "sapphire",
+      "obsidian",
+      "amethyst",
+    ];
+    return themes[index % themes.length];
+  };
+
   const handleArchiveToggle = async (account: any) => {
     const action = account.isArchived ? "unarchive" : "archive";
     if (confirm(`Are you sure you want to ${action} ${account.name}?`)) {
@@ -109,19 +122,22 @@ export default function AccountsPage() {
 
   return (
     <AppShell>
-      <div className="space-y-6">
+      <div className="space-y-8">
         {/* Top Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight">
-              Accounts & Wallets
+            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+              Accounts &amp; 3D Cards
+              <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-bold border border-emerald-500/30">
+                Interactive
+              </span>
             </h1>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              Manage cash, bank balances, cards, and execute inter-account transfers
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              Hover over cards to trigger 3D perspective tilt. Execute seamless double-entry transfers.
             </p>
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-3">
             <Button
               onClick={() => {
                 setSourceAccountId(activeAccounts[0]?.id || "");
@@ -129,10 +145,10 @@ export default function AccountsPage() {
               }}
               variant="outline"
               size="md"
-              className="rounded-xl font-semibold"
+              className="rounded-2xl font-bold border-slate-200 dark:border-white/10 hover:border-emerald-500/50 shadow-sm"
               disabled={activeAccounts.length < 2}
             >
-              <ArrowLeftRight className="w-4 h-4" />
+              <ArrowLeftRight className="w-4 h-4 text-emerald-500" />
               Transfer Money
             </Button>
 
@@ -143,7 +159,7 @@ export default function AccountsPage() {
               }}
               variant="primary"
               size="md"
-              className="rounded-xl font-semibold shadow-sm"
+              className="rounded-2xl font-bold shadow-lg shadow-emerald-500/25"
             >
               <Plus className="w-4 h-4" />
               New Account
@@ -152,52 +168,79 @@ export default function AccountsPage() {
         </div>
 
         {errorMessage && (
-          <div className="p-3.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 rounded-xl text-xs text-rose-700 dark:text-rose-300 flex items-center gap-2">
+          <div className="p-4 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 rounded-2xl text-xs text-rose-700 dark:text-rose-300 flex items-center gap-2.5">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{errorMessage}</span>
           </div>
         )}
 
-        {/* Total Net Balance Banner */}
-        <Card className="bg-gradient-to-r from-emerald-600 to-teal-700 text-white p-6 rounded-2xl shadow-lg shadow-emerald-600/10 border-0">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <p className="text-xs uppercase tracking-wider font-bold text-emerald-100">
-                Total Available Net Worth
-              </p>
-              <h2 className="text-3xl font-black tracking-tight mt-1">
+        {/* 3D Total Net Balance Banner with Vault Prop */}
+        <div className="relative rounded-3xl p-6 sm:p-8 bg-gradient-to-r from-emerald-950 via-teal-950 to-slate-950 border border-emerald-500/30 shadow-2xl overflow-hidden animate-shimmer">
+          {/* Ambient Glow Orbs */}
+          <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative z-10">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-xs uppercase tracking-widest font-extrabold text-emerald-400">
+                <Sparkles className="w-4 h-4" />
+                Total Liquid Net Worth
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight drop-shadow-md">
                 {formatCurrency(totalBalance)}
               </h2>
-              <p className="text-xs text-emerald-100/90 mt-1">
-                Calculated across {activeAccounts.length} active account{activeAccounts.length !== 1 ? "s" : ""}
+              <p className="text-xs text-emerald-200/80 font-medium">
+                Aggregated in real-time across {activeAccounts.length} active account{activeAccounts.length !== 1 ? "s" : ""}
               </p>
             </div>
 
-            <div className="flex items-center gap-2">
-              <Button
-                onClick={() => {
-                  setSourceAccountId(activeAccounts[0]?.id || "");
-                  setTransferModalOpen(true);
-                }}
-                variant="secondary"
-                size="sm"
-                className="bg-white/10 hover:bg-white/20 text-white border-0 backdrop-blur-md"
-                disabled={activeAccounts.length < 2}
-              >
-                <ArrowLeftRight className="w-3.5 h-3.5" />
-                Inter-Account Transfer
-              </Button>
+            {/* 3D Vault Illustration Graphic */}
+            <div className="flex items-center justify-center sm:justify-end">
+              <Vault3DProp className="w-32 h-32 sm:w-36 sm:h-36 drop-shadow-2xl animate-float" />
             </div>
           </div>
-        </Card>
+        </div>
 
-        {/* Active Accounts Grid */}
-        <div>
-          <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 mb-3">
-            Active Accounts ({activeAccounts.length})
+        {/* 3D Interactive Cards Showcase */}
+        {activeAccounts.length > 0 && (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-extrabold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+                <span>3D Visualizer Deck</span>
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+              </h3>
+              <span className="text-[11px] text-slate-400">Tilt with your cursor</span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {activeAccounts.map((account, index) => (
+                <CreditCardVisualizer
+                  key={account.id}
+                  id={account.id}
+                  name={account.name}
+                  type={account.type}
+                  balancePaise={account.currentBalancePaise}
+                  theme={getThemeForIndex(index)}
+                  onTransferClick={() => {
+                    setSourceAccountId(account.id);
+                    setTransferModalOpen(true);
+                  }}
+                  onAddTransactionClick={() => {
+                    setEditingAccount(account);
+                    setAccountModalOpen(true);
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Detailed Accounts Table / List */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-extrabold text-slate-900 dark:text-white uppercase tracking-wider">
+            Ledger Accounts ({activeAccounts.length})
           </h3>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {activeAccounts.map((account) => {
               const Icon = getAccountIcon(account.type);
               const isNegative = Number(account.currentBalancePaise) < 0;
@@ -206,21 +249,21 @@ export default function AccountsPage() {
                 <Card
                   key={account.id}
                   hover
-                  className="flex flex-col justify-between relative overflow-hidden"
+                  className="flex flex-col justify-between p-6 relative overflow-hidden group"
                 >
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3">
+                  <div className="flex items-start justify-between relative z-10">
+                    <div className="flex items-center gap-3.5">
                       <div
-                        className="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-sm"
-                        style={{ backgroundColor: account.color || "#3b82f6" }}
+                        className="w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-black/20 group-hover:scale-105 transition-transform"
+                        style={{ backgroundColor: account.color || "#10b981" }}
                       >
-                        <Icon className="w-5 h-5" />
+                        <Icon className="w-6 h-6 drop-shadow" />
                       </div>
                       <div>
-                        <h4 className="text-sm font-bold text-slate-900 dark:text-slate-100">
+                        <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-emerald-400 transition-colors">
                           {account.name}
                         </h4>
-                        <Badge variant="neutral" size="sm" className="mt-0.5">
+                        <Badge variant="neutral" size="sm" className="mt-1">
                           {account.type.replace("_", " ")}
                         </Badge>
                       </div>
@@ -233,35 +276,35 @@ export default function AccountsPage() {
                           setAccountModalOpen(true);
                         }}
                         title="Edit account"
-                        className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+                        className="p-2 text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-colors"
                       >
                         <Edit2 className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => handleArchiveToggle(account)}
                         title="Archive account"
-                        className="p-1.5 text-slate-400 hover:text-amber-600 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+                        className="p-2 text-slate-400 hover:text-amber-500 rounded-xl hover:bg-amber-50 dark:hover:bg-amber-950/40 transition-colors"
                       >
                         <Archive className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => handleDelete(account.id)}
                         title="Delete account"
-                        className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+                        className="p-2 text-slate-400 hover:text-rose-500 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </div>
 
-                  <div className="mt-5 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-end justify-between">
+                  <div className="mt-6 pt-4 border-t border-slate-100 dark:border-white/10 flex items-end justify-between relative z-10">
                     <div>
-                      <span className="text-[10px] uppercase font-bold text-slate-400">
-                        Current Balance
+                      <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
+                        Available Balance
                       </span>
                       <div
                         className={`text-xl font-black tracking-tight ${
-                          isNegative ? "text-rose-600 dark:text-rose-400" : "text-slate-900 dark:text-slate-100"
+                          isNegative ? "text-rose-500" : "text-slate-900 dark:text-white"
                         }`}
                       >
                         {formatCurrency(account.currentBalancePaise)}
@@ -275,7 +318,7 @@ export default function AccountsPage() {
                       }}
                       variant="ghost"
                       size="sm"
-                      className="text-xs text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 px-2 py-1"
+                      className="text-xs text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 font-bold"
                     >
                       Transfer
                     </Button>
@@ -288,13 +331,13 @@ export default function AccountsPage() {
 
         {/* Archived Accounts (if any) */}
         {archivedAccounts.length > 0 && (
-          <div className="pt-4">
-            <h3 className="text-sm font-bold text-slate-500 dark:text-slate-400 mb-3">
+          <div className="pt-6">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3">
               Archived Accounts ({archivedAccounts.length})
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 opacity-70">
               {archivedAccounts.map((account) => (
-                <Card key={account.id} className="bg-slate-50 dark:bg-slate-800/40">
+                <Card key={account.id} className="p-4 bg-slate-100/50 dark:bg-slate-900/30">
                   <div className="flex items-center justify-between">
                     <div>
                       <h4 className="text-sm font-bold text-slate-700 dark:text-slate-300">
@@ -308,6 +351,7 @@ export default function AccountsPage() {
                       onClick={() => handleArchiveToggle(account)}
                       variant="outline"
                       size="sm"
+                      className="rounded-xl"
                     >
                       Unarchive
                     </Button>
