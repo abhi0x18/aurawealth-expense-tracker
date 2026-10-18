@@ -11,7 +11,10 @@ export function middleware(request: NextRequest) {
     pathname === "/" ||
     pathname === "/setup" ||
     pathname === "/login" ||
+    pathname === "/download" ||
+    pathname.startsWith("/download") ||
     pathname.startsWith("/images") ||
+    pathname.startsWith("/icons") ||
     pathname.includes(".")
   ) {
     return NextResponse.next();

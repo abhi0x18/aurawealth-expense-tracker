@@ -17,6 +17,7 @@ import {
   Layers,
   Sparkles,
   ShieldCheck,
+  Download,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -33,6 +34,7 @@ const NAV_ITEMS = [
   { href: "/goals", label: "Savings Goals", icon: PiggyBank },
   { href: "/reports", label: "Reports & Analytics", icon: BarChart3 },
   { href: "/categories", label: "Categories & Tags", icon: Tags },
+  { href: "/download", label: "Download App", icon: Download },
   { href: "/settings", label: "Settings", icon: Settings },
   { href: "/", label: "Cashflow Intro", icon: Sparkles },
 ];

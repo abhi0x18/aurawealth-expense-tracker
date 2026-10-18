@@ -14,6 +14,7 @@ import { TransactionModal } from "@/components/modals/TransactionModal";
 import { Button } from "@/components/ui/Button";
 import { triggerConfetti } from "@/lib/confetti";
 import { useCurrency } from "@/context/CurrencyContext";
+import { PwaInstallPrompt } from "@/components/ui/PwaInstallPrompt";
 import Link from "next/link";
 import {
   Wallet,
@@ -325,6 +326,9 @@ export default function DashboardPage() {
           fetchDashboard();
         }}
       />
+
+      {/* Floating PWA / Desktop App Install Notification Banner */}
+      <PwaInstallPrompt variant="floating" />
     </AppShell>
   );
 }

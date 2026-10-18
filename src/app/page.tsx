@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { triggerConfetti } from "@/lib/confetti";
-import { ShieldCheck, LogIn, LayoutDashboard } from "lucide-react";
+import { ShieldCheck, LogIn, LayoutDashboard, Download } from "lucide-react";
 
 export default function CashflowLandingPage() {
   const router = useRouter();
@@ -114,6 +114,23 @@ export default function CashflowLandingPage() {
       });
     }
 
+    // Pre-render golden ember sprite once to eliminate GC thrashing and canvas lag
+    const sprite = document.createElement("canvas");
+    sprite.width = 32;
+    sprite.height = 32;
+    const sCtx = sprite.getContext("2d");
+    if (sCtx) {
+      const grad = sCtx.createRadialGradient(16, 16, 0, 16, 16, 16);
+      grad.addColorStop(0, "rgba(255, 240, 170, 1)");
+      grad.addColorStop(0.35, "rgba(235, 185, 75, 0.7)");
+      grad.addColorStop(0.7, "rgba(200, 120, 20, 0.25)");
+      grad.addColorStop(1, "rgba(180, 90, 0, 0)");
+      sCtx.fillStyle = grad;
+      sCtx.beginPath();
+      sCtx.arc(16, 16, 16, 0, Math.PI * 2);
+      sCtx.fill();
+    }
+
     let frame = 0;
     const render = () => {
       frame++;
@@ -129,16 +146,11 @@ export default function CashflowLandingPage() {
           p.x = Math.random() * width;
         }
 
-        const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius * 2);
-        grad.addColorStop(0, `rgba(255, 238, 160, ${p.opacity})`);
-        grad.addColorStop(0.5, `rgba(229, 178, 70, ${p.opacity * 0.6})`);
-        grad.addColorStop(1, "rgba(200, 100, 0, 0)");
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius * 2, 0, Math.PI * 2);
-        ctx.fillStyle = grad;
-        ctx.fill();
+        ctx.globalAlpha = p.opacity;
+        const size = p.radius * 3.5;
+        ctx.drawImage(sprite, p.x - size / 2, p.y - size / 2, size, size);
       });
+      ctx.globalAlpha = 1;
 
       animId = requestAnimationFrame(render);
     };
@@ -159,14 +171,19 @@ export default function CashflowLandingPage() {
       onClick={startGame}
     >
       <style jsx>{`
-        .screen-container {
+        .bg-hero-layer {
+          position: absolute;
+          inset: 0;
           background: url('/images/cashflow-hero.jpg') center/cover no-repeat;
           animation: bgZoom 22s ease-in-out infinite alternate;
+          will-change: transform;
+          transform-origin: center center;
+          z-index: 0;
         }
 
         @keyframes bgZoom {
           0% { transform: scale(1); }
-          100% { transform: scale(1.07); }
+          100% { transform: scale(1.06); }
         }
 
         /* Dark radial overlay to make the UI pop */
@@ -371,6 +388,9 @@ export default function CashflowLandingPage() {
         }
       `}</style>
 
+      {/* Isolated Hardware-Accelerated Cashflow Background */}
+      <div className="bg-hero-layer" />
+
       {/* Dark Vignette Overlay */}
       <div className="vignette" />
 
@@ -386,6 +406,18 @@ export default function CashflowLandingPage() {
 
       {/* Quick Direct Access Buttons in top header */}
       <div className="absolute top-7 right-8 z-20 flex items-center gap-3">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            router.push("/download");
+          }}
+          className="px-3.5 py-2 rounded-full glass-panel border border-emerald-400/40 text-emerald-300 hover:text-white hover:bg-emerald-500/20 text-xs sm:text-sm font-bold flex items-center gap-1.5 transition-all shadow-lg active:scale-95"
+          title="Install App on Desktop or Mobile"
+        >
+          <Download className="w-3.5 h-3.5 text-emerald-400" />
+          <span>Get App</span>
+        </button>
+
         {isAuthenticated ? (
           <button
             onClick={(e) => {

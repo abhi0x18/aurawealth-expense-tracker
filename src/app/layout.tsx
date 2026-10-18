@@ -25,6 +25,12 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700;800&family=Montserrat:wght@500;600;700;800;900&family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700;800&display=swap"
           rel="stylesheet"
         />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#10b981" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="AuraWealth" />
+        <link rel="apple-touch-icon" href="/icons/icon-192.png" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -35,6 +41,12 @@ export default function RootLayout({
                   document.documentElement.classList.remove('dark');
                 }
               } catch (_) {}
+
+              if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js').catch(function() {});
+                });
+              }
             `,
           }}
         />

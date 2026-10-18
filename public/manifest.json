@@ -1,0 +1,48 @@
+{
+  "name": "AuraWealth 3D — Cashflow & Wealth Cockpit",
+  "short_name": "AuraWealth",
+  "description": "Next-Generation 3D Personal Expense, Cashflow & Spatial Wealth Management",
+  "start_url": "/",
+  "id": "/",
+  "display": "standalone",
+  "background_color": "#070a07",
+  "theme_color": "#10b981",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["finance", "productivity", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Open 3D Cockpit",
+      "short_name": "Cockpit",
+      "description": "Direct access to 3D wealth dashboard",
+      "url": "/dashboard",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Log Transaction",
+      "short_name": "Add Expense",
+      "description": "Quickly record a new transaction",
+      "url": "/transactions",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

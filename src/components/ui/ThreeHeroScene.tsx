@@ -21,10 +21,13 @@ export function ThreeHeroScene() {
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
     camera.position.set(0, 0, 7.8);
 
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    const renderer = new THREE.WebGLRenderer({
+      alpha: true,
+      antialias: true,
+      powerPreference: "high-performance",
+    });
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.shadowMap.enabled = true;
+    renderer.setPixelRatio(Math.min(typeof window !== "undefined" ? window.devicePixelRatio : 1, 1.5));
     container.appendChild(renderer.domElement);
 
     // Group for entire interactive assembly
@@ -33,17 +36,12 @@ export function ThreeHeroScene() {
 
     // 1. Centerpiece: 3D Credit / Wealth Card
     const cardGeo = new THREE.BoxGeometry(3.6, 2.2, 0.12);
-    const cardMat = new THREE.MeshPhysicalMaterial({
-      color: 0x070b14,
-      metalness: 0.9,
-      roughness: 0.15,
-      clearcoat: 1.0,
-      clearcoatRoughness: 0.08,
-      reflectivity: 1.0,
+    const cardMat = new THREE.MeshStandardMaterial({
+      color: 0x090e1a,
+      metalness: 0.88,
+      roughness: 0.18,
     });
     const cardMesh = new THREE.Mesh(cardGeo, cardMat);
-    cardMesh.castShadow = true;
-    cardMesh.receiveShadow = true;
     heroGroup.add(cardMesh);
 
     // Glowing Neon Rim for Card
@@ -219,12 +217,26 @@ export function ThreeHeroScene() {
 
     window.addEventListener("resize", handleResize);
 
+    // Performance: Pause rendering when off-screen
+    let isVisible = true;
+    let observer: IntersectionObserver | null = null;
+    if ("IntersectionObserver" in window) {
+      observer = new IntersectionObserver(([entry]) => {
+        isVisible = entry.isIntersecting;
+      }, { threshold: 0.05 });
+      observer.observe(container);
+    }
+
     // Animation Loop
     let animationFrameId: number;
     let clock = new THREE.Clock();
 
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
+
+      // Skip render calculations entirely if not visible in viewport
+      if (!isVisible) return;
+
       const elapsed = clock.getElapsedTime();
 
       // Smooth interpolation for mouse tilt
@@ -244,19 +256,9 @@ export function ThreeHeroScene() {
       ring1Mesh.rotation.z = elapsed * 0.5;
       ring2Mesh.rotation.z = -elapsed * 0.35;
 
-      // Swirl stardust particles in vortex
-      const positions = particleGeo.attributes.position.array as Float32Array;
-      for (let i = 0; i < particleCount; i++) {
-        const speed = particleSpeeds[i];
-        let x = positions[i * 3];
-        let z = positions[i * 3 + 2];
-        const angle = Math.atan2(z, x) + 0.008 * speed;
-        const r = Math.sqrt(x * x + z * z);
-        positions[i * 3] = Math.cos(angle) * r;
-        positions[i * 3 + 2] = Math.sin(angle) * r;
-        positions[i * 3 + 1] += Math.sin(elapsed * 2 + i) * 0.003;
-      }
-      particleGeo.attributes.position.needsUpdate = true;
+      // Swirl stardust particles in vortex (GPU transform - 0 CPU overhead)
+      particleSystem.rotation.y += 0.004;
+      particleSystem.rotation.x = Math.sin(elapsed * 0.4) * 0.08;
 
       // Coins orbit in continuous circle & spin
       coins.forEach((c) => {
@@ -284,6 +286,7 @@ export function ThreeHeroScene() {
 
     return () => {
       cancelAnimationFrame(animationFrameId);
+      if (observer) observer.disconnect();
       container.removeEventListener("mousemove", handleMouseMove);
       container.removeEventListener("click", handleClick);
       window.removeEventListener("resize", handleResize);
@@ -291,6 +294,12 @@ export function ThreeHeroScene() {
         container.removeChild(renderer.domElement);
       }
       renderer.dispose();
+      cardGeo.dispose();
+      cardMat.dispose();
+      rimGeo.dispose();
+      rimMat.dispose();
+      particleGeo.dispose();
+      particleMat.dispose();
     };
   }, []);
 
