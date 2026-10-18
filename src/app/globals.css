@@ -7,7 +7,7 @@
   --foreground: #0f172a;
   --bg-primary: #f8fafc;
   --bg-card: rgba(255, 255, 255, 0.85);
-  --border-glass: rgba(226, 232, 240, 0.8);
+  --border-glass: rgba(226, 232, 240, 0.85);
   --text-main: #0f172a;
   --shadow-ambient: 0 20px 50px -12px rgba(15, 23, 42, 0.08);
 }
@@ -26,8 +26,8 @@ body {
   color: var(--text-main);
   background-color: var(--bg-primary);
   min-height: 100vh;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 15px; /* Increased base readability: prevents fonts from looking small */
+  font-family: 'Urbanist', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 15px; /* Boosted base readability */
   line-height: 1.6;
   overflow-x: hidden;
   transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s ease;
@@ -35,39 +35,55 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Ambient Mesh Gradient Background */
+/* Ambient Animated Spatial Mesh Gradient */
+@keyframes ambientDrift {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -20px) scale(1.05);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.97);
+  }
+}
+
 .ambient-mesh {
   position: fixed;
-  inset: 0;
+  inset: -10%;
+  width: 120%;
+  height: 120%;
   z-index: -1;
   pointer-events: none;
+  animation: ambientDrift 22s ease-in-out infinite alternate;
   background: 
-    radial-gradient(circle at 12% 18%, rgba(16, 185, 129, 0.14) 0%, transparent 40%),
-    radial-gradient(circle at 88% 14%, rgba(99, 102, 241, 0.15) 0%, transparent 45%),
-    radial-gradient(circle at 50% 65%, rgba(244, 63, 94, 0.08) 0%, transparent 48%),
-    radial-gradient(circle at 80% 85%, rgba(16, 185, 129, 0.1) 0%, transparent 35%);
+    radial-gradient(circle at 14% 18%, rgba(16, 185, 129, 0.16) 0%, transparent 42%),
+    radial-gradient(circle at 86% 14%, rgba(99, 102, 241, 0.16) 0%, transparent 46%),
+    radial-gradient(circle at 50% 65%, rgba(244, 63, 94, 0.09) 0%, transparent 50%),
+    radial-gradient(circle at 80% 85%, rgba(14, 165, 233, 0.12) 0%, transparent 38%);
   transition: opacity 0.5s ease;
 }
 
 .dark .ambient-mesh, html.dark .ambient-mesh {
   background: 
-    radial-gradient(circle at 15% 20%, rgba(16, 185, 129, 0.22) 0%, transparent 45%),
-    radial-gradient(circle at 85% 18%, rgba(99, 102, 241, 0.22) 0%, transparent 48%),
-    radial-gradient(circle at 50% 75%, rgba(244, 63, 94, 0.14) 0%, transparent 50%),
-    radial-gradient(circle at 20% 90%, rgba(14, 165, 233, 0.12) 0%, transparent 40%);
+    radial-gradient(circle at 15% 20%, rgba(16, 185, 129, 0.24) 0%, transparent 45%),
+    radial-gradient(circle at 85% 18%, rgba(99, 102, 241, 0.24) 0%, transparent 50%),
+    radial-gradient(circle at 50% 75%, rgba(244, 63, 94, 0.15) 0%, transparent 52%),
+    radial-gradient(circle at 20% 90%, rgba(14, 165, 233, 0.15) 0%, transparent 42%);
 }
 
-/* Glassmorphism Surface */
+/* Glassmorphism Surface with subtle iridescent edge */
 .glass-panel {
   background: var(--bg-card);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border-glass);
   box-shadow: var(--shadow-ambient);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 .glass-panel-light {
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.88);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(226, 232, 240, 0.9);
@@ -78,17 +94,17 @@ body {
 .tilt-card {
   transform-style: preserve-3d;
   perspective: 1200px;
-  transition: transform 0.2s cubic-bezier(0.03, 0.98, 0.52, 0.99), box-shadow 0.3s ease;
+  transition: transform 0.25s cubic-bezier(0.03, 0.98, 0.52, 0.99), box-shadow 0.35s ease;
   position: relative;
 }
 
 .tilt-inner {
-  transform: translateZ(24px);
+  transform: translateZ(26px);
   transform-style: preserve-3d;
 }
 
 .tilt-inner-deep {
-  transform: translateZ(42px);
+  transform: translateZ(46px);
   transform-style: preserve-3d;
 }
 
@@ -98,8 +114,8 @@ body {
   border-radius: inherit;
   pointer-events: none;
   background: radial-gradient(
-    500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    rgba(255, 255, 255, 0.35),
+    520px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(255, 255, 255, 0.38),
     transparent 45%
   );
   opacity: 0;
@@ -109,8 +125,8 @@ body {
 
 .dark .tilt-glare, html.dark .tilt-glare {
   background: radial-gradient(
-    500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    rgba(255, 255, 255, 0.12),
+    520px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(255, 255, 255, 0.15),
     transparent 45%
   );
 }
@@ -122,7 +138,43 @@ body {
 /* 3D Wallet Card Mesh Surface */
 .wallet-3d-surface {
   background: linear-gradient(135deg, #0F172A 0%, #1E1B4B 52%, #064E3B 100%);
-  box-shadow: 0 25px 50px -12px rgba(79, 70, 229, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 25px 50px -12px rgba(79, 70, 229, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.35);
+}
+
+/* Animated Flowing Gradient Text */
+.animated-gradient-text {
+  background: linear-gradient(90deg, #10b981, #14b8a6, #6366f1, #a855f7, #10b981);
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientFlow 6s linear infinite;
+}
+
+/* Flowing Iridescent Border Card Effect */
+.animated-border-card {
+  position: relative;
+  border-radius: 1.5rem;
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: all 0.3s ease;
+}
+
+.animated-border-card::before {
+  content: "";
+  position: absolute;
+  inset: -1.5px;
+  border-radius: calc(1.5rem + 1.5px);
+  background: linear-gradient(90deg, #10b981, #6366f1, #ec4899, #10b981);
+  background-size: 300% 300%;
+  animation: gradientFlow 5s ease infinite;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.animated-border-card:hover::before {
+  opacity: 1;
 }
 
 /* Subtle Matrix Mesh Grid */
@@ -131,6 +183,20 @@ body {
   background-image: 
     linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+}
+
+/* Floating Badges */
+@keyframes floatGentle {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-float-gentle {
+  animation: floatGentle 4.5s ease-in-out infinite;
 }
 
 /* Custom Scrollbars */

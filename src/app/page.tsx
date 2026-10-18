@@ -115,7 +115,7 @@ export default function DashboardPage() {
             <div className="lg:col-span-7 space-y-6 text-center lg:text-left z-10">
               
               {/* Animated Live Savings Counter Badge */}
-              <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full glass-panel border border-emerald-500/30 shadow-md">
+              <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full glass-panel border border-emerald-500/35 shadow-md animate-float-gentle">
                 <span className="flex h-3 w-3 relative">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                   <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500" />
@@ -131,10 +131,10 @@ export default function DashboardPage() {
                 </span>
               </div>
 
-              {/* Display Headline */}
-              <h1 className="font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl tracking-tight leading-[1.08] text-slate-900 dark:text-white">
+              {/* Display Headline with animated flowing gradient */}
+              <h1 className="font-display font-black text-4xl sm:text-5xl lg:text-6xl tracking-tight leading-[1.08] text-slate-900 dark:text-white">
                 Master Your Money in <br className="hidden sm:inline" />
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 via-teal-400 to-indigo-500">
+                <span className="animated-gradient-text drop-shadow-sm font-black">
                   Spatial 3D Clarity.
                 </span>
               </h1>

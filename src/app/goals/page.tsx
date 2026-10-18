@@ -9,6 +9,7 @@ import { GoalModal } from "@/components/goals/GoalModal";
 import { ContributionModal } from "@/components/goals/ContributionModal";
 import { Target3DProp } from "@/components/ui/FinancialProps";
 import { useCurrency } from "@/context/CurrencyContext";
+import { AnimatedCounter } from "@/components/ui/AnimatedCounter";
 import { triggerConfetti, triggerGoalCelebration } from "@/lib/confetti";
 import { calculatePercentage } from "@/lib/money";
 import { formatDate } from "@/lib/date";
@@ -117,7 +118,7 @@ export default function GoalsPage() {
                 Aggregated Savings Progress
               </div>
               <h2 className="text-4xl sm:text-5xl lg:text-6xl font-mono font-black text-white tracking-tight drop-shadow-lg">
-                {formatMoney(totalSavedPaise)}
+                <AnimatedCounter valuePaise={totalSavedPaise} />
                 <span className="text-xl sm:text-2xl font-bold text-slate-400 ml-3">
                   / {formatMoney(totalTargetPaise)}
                 </span>

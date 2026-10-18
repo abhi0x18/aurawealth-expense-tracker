@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/Badge";
 import { BudgetModal } from "@/components/budgets/BudgetModal";
 import { Target3DProp } from "@/components/ui/FinancialProps";
 import { useCurrency } from "@/context/CurrencyContext";
+import { AnimatedCounter } from "@/components/ui/AnimatedCounter";
 import { triggerConfetti } from "@/lib/confetti";
 import { formatMonthYear } from "@/lib/date";
 import {
@@ -150,7 +151,7 @@ export default function BudgetsPage() {
 
                 <div className="flex items-baseline gap-4">
                   <span className="text-4xl sm:text-5xl font-mono font-black text-white tracking-tight">
-                    {formatMoney(overallBudget.spentPaise)}
+                    <AnimatedCounter valuePaise={overallBudget.spentPaise} />
                   </span>
                   <span className="text-lg text-slate-400 font-bold font-mono">
                     of {formatMoney(overallBudget.budgetPaise)}

@@ -10,6 +10,7 @@ import { TransferModal } from "@/components/accounts/TransferModal";
 import { CreditCardVisualizer } from "@/components/ui/CreditCardVisualizer";
 import { Vault3DProp } from "@/components/ui/FinancialProps";
 import { useCurrency } from "@/context/CurrencyContext";
+import { AnimatedCounter } from "@/components/ui/AnimatedCounter";
 import { triggerConfetti } from "@/lib/confetti";
 import {
   Landmark,
@@ -188,7 +189,7 @@ export default function AccountsPage() {
                 Total Liquid Net Worth
               </div>
               <h2 className="text-4xl sm:text-5xl lg:text-6xl font-mono font-black text-white tracking-tight drop-shadow-lg">
-                {formatMoney(totalBalance)}
+                <AnimatedCounter valuePaise={totalBalance} />
               </h2>
               <p className="text-sm text-emerald-200/90 font-medium">
                 Aggregated in real-time across {activeAccounts.length} active account{activeAccounts.length !== 1 ? "s" : ""}

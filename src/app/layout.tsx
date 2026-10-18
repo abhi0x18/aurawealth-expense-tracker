@@ -3,7 +3,7 @@ import "./globals.css";
 import { APP_CONFIG } from "@/config/app";
 
 export const metadata: Metadata = {
-  title: "AuraWealth 3D — Next-Gen Personal Expense & Wealth Tracker",
+  title: "AuraWealth 3D — Next-Gen Spatial Expense & Wealth OS",
   description: "Experience tactile financial control with an interactive 3D wealth cockpit, instant AI categorization, and zero-lag spatial ledger tracking.",
   icons: {
     icon: "/favicon.ico",
@@ -18,11 +18,11 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
-        {/* Google Fonts: Plus Jakarta Sans & Inter & JetBrains Mono */}
+        {/* Google Fonts: Outfit (Display & Headlines), Urbanist (Body), Space Grotesk & JetBrains Mono (Numbers) */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+          href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800&family=Space+Grotesk:wght@500;600;700&family=Urbanist:wght@400;500;600;700;800&display=swap"
           rel="stylesheet"
         />
         <script

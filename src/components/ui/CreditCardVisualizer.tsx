@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useCurrency } from "@/context/CurrencyContext";
+import { AnimatedCounter } from "@/components/ui/AnimatedCounter";
 import { Wifi, ArrowUpRight, Sparkles } from "lucide-react";
 
 interface CreditCardVisualizerProps {
@@ -100,7 +101,7 @@ export function CreditCardVisualizer({
             Current Balance
           </p>
           <h3 className="text-3xl sm:text-4xl font-mono font-black tracking-tight text-white drop-shadow-lg">
-            {formatMoney(balancePaise)}
+            <AnimatedCounter valuePaise={balancePaise} />
           </h3>
         </div>
 

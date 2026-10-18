@@ -10,9 +10,9 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Inter", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
-        display: ["'Plus Jakarta Sans'", "Inter", "sans-serif"],
-        mono: ["'JetBrains Mono'", "ui-monospace", "SFMono-Regular", "monospace"],
+        sans: ["Urbanist", "Inter", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
+        display: ["Outfit", "'Plus Jakarta Sans'", "sans-serif"],
+        mono: ["'Space Grotesk'", "'JetBrains Mono'", "monospace"],
       },
       colors: {
         background: "var(--background)",
@@ -48,21 +48,32 @@ const config: Config = {
       animation: {
         "float-slow": "floatSlow 6s ease-in-out infinite",
         "float-delayed": "floatSlow 7s ease-in-out 2s infinite",
+        "float-gentle": "floatGentle 4s ease-in-out infinite",
         "pulse-glow": "pulseGlow 3s ease-in-out infinite",
         "shimmer": "shimmer 3s infinite",
+        "gradient-flow": "gradientFlow 5s ease infinite",
+        "spin-slow": "spin 20s linear infinite",
       },
       keyframes: {
         floatSlow: {
           "0%, 100%": { transform: "translateY(0px) translateZ(30px)" },
-          "50%": { transform: "translateY(-10px) translateZ(40px)" },
+          "50%": { transform: "translateY(-12px) translateZ(45px)" },
+        },
+        floatGentle: {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-6px)" },
         },
         pulseGlow: {
           "0%, 100%": { opacity: "0.6", transform: "scale(1)" },
-          "50%": { opacity: "1", transform: "scale(1.06)" },
+          "50%": { opacity: "1", transform: "scale(1.08)" },
         },
         shimmer: {
           "0%": { transform: "translateX(-100%)" },
           "100%": { transform: "translateX(200%)" },
+        },
+        gradientFlow: {
+          "0%, 100%": { "background-size": "200% 200%", "background-position": "left center" },
+          "50%": { "background-size": "200% 200%", "background-position": "right center" },
         },
       },
     },
