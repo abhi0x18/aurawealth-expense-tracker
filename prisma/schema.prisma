@@ -1,0 +1,205 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                   String                @id @default(cuid())
+  name                 String
+  email                String                @unique
+  passwordHash         String
+  currency             String                @default("INR")
+  currencySymbol       String                @default("₹")
+  timezone             String                @default("Asia/Kolkata")
+  budgetAlertThreshold Int                   @default(80)
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+
+  accounts             Account[]
+  categories           Category[]
+  transactions         Transaction[]
+  budgets              Budget[]
+  recurringRules       RecurringRule[]
+  savingsGoals         SavingsGoal[]
+  sessions             Session[]
+  transactionTemplates TransactionTemplate[]
+  importHistories      ImportHistory[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Account {
+  id                  String                @id @default(cuid())
+  userId              String
+  user                User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name                String
+  type                String                // CASH, BANK, UPI_WALLET, SAVINGS, CREDIT_CARD, OTHER
+  openingBalancePaise BigInt                @default(0)
+  isArchived          Boolean               @default(false)
+  color               String?
+  notes               String?
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+
+  transactions        Transaction[]         @relation("AccountTransactions")
+  destinationTransfers Transaction[]        @relation("DestinationAccountTransactions")
+  recurringRules      RecurringRule[]
+  savingsContributions SavingsContribution[]
+}
+
+model Category {
+  id         String                @id @default(cuid())
+  userId     String
+  user       User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name       String
+  type       String                // EXPENSE, INCOME
+  icon       String?
+  color      String?
+  isDefault  Boolean               @default(false)
+  isArchived Boolean               @default(false)
+  createdAt  DateTime              @default(now())
+  updatedAt  DateTime              @updatedAt
+
+  transactions Transaction[]
+  budgets      Budget[]
+  recurringRules RecurringRule[]
+  templates    TransactionTemplate[]
+
+  @@unique([userId, name, type])
+}
+
+model Transaction {
+  id                    String         @id @default(cuid())
+  userId                String
+  user                  User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type                  String         // EXPENSE, INCOME, TRANSFER
+  amountPaise           BigInt
+  date                  DateTime
+  accountId             String
+  account               Account        @relation("AccountTransactions", fields: [accountId], references: [id], onDelete: Restrict)
+  toAccountId           String?
+  toAccount             Account?       @relation("DestinationAccountTransactions", fields: [toAccountId], references: [id], onDelete: Restrict)
+  categoryId            String?
+  category              Category?      @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  merchant              String?
+  paymentMethod         String?        // CASH, UPI, CARD, NET_BANKING, OTHER
+  notes                 String?
+  tags                  String?
+  recurringRuleId       String?
+  recurringRule         RecurringRule? @relation(fields: [recurringRuleId], references: [id], onDelete: SetNull)
+  isExcludedFromBudget  Boolean        @default(false)
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+
+  @@index([userId, date])
+  @@index([userId, accountId])
+  @@index([userId, categoryId])
+}
+
+model Budget {
+  id             String    @id @default(cuid())
+  userId         String
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  categoryId     String?   // null means overall monthly budget
+  category       Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  monthYear      String    // Format "YYYY-MM"
+  amountPaise    BigInt
+  alertThreshold Int       @default(80)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@unique([userId, categoryId, monthYear])
+}
+
+model RecurringRule {
+  id                    String        @id @default(cuid())
+  userId                String
+  user                  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type                  String        // EXPENSE, INCOME
+  amountPaise           BigInt
+  frequency             String        // WEEKLY, MONTHLY, QUARTERLY, YEARLY
+  startDate             DateTime
+  endDate               DateTime?
+  nextDueDate           DateTime
+  lastProcessedDate     DateTime?
+  accountId             String
+  account               Account       @relation(fields: [accountId], references: [id], onDelete: Restrict)
+  categoryId            String?
+  category              Category?     @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  merchant              String?
+  description           String?
+  isActive              Boolean       @default(true)
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  generatedTransactions Transaction[]
+}
+
+model SavingsGoal {
+  id                String                @id @default(cuid())
+  userId            String
+  user              User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name              String
+  targetAmountPaise BigInt
+  currentAmountPaise BigInt               @default(0)
+  targetDate        DateTime?
+  description       String?
+  color             String?
+  status            String                @default("IN_PROGRESS") // IN_PROGRESS, COMPLETED, PAUSED
+  createdAt         DateTime              @default(now())
+  updatedAt         DateTime              @updatedAt
+
+  contributions     SavingsContribution[]
+}
+
+model SavingsContribution {
+  id          String      @id @default(cuid())
+  goalId      String
+  goal        SavingsGoal @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  amountPaise BigInt
+  date        DateTime    @default(now())
+  notes       String?
+  accountId   String?
+  account     Account?    @relation(fields: [accountId], references: [id], onDelete: SetNull)
+  createdAt   DateTime    @default(now())
+}
+
+model TransactionTemplate {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name          String
+  type          String    // EXPENSE, INCOME, TRANSFER
+  amountPaise   BigInt?
+  accountId     String?
+  categoryId    String?
+  category      Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  merchant      String?
+  paymentMethod String?
+  notes         String?
+  tags          String?
+  createdAt     DateTime  @default(now())
+}
+
+model ImportHistory {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fileName       String
+  rowCount       Int
+  importedCount  Int
+  skippedCount   Int
+  errorCount     Int
+  importedAt     DateTime @default(now())
+}
