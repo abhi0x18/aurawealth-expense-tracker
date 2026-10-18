@@ -119,7 +119,7 @@ export default function AccountsPage() {
   const archivedAccounts = accounts.filter((a) => a.isArchived);
 
   const totalBalance = activeAccounts.reduce(
-    (sum, a) => sum + BigInt(a.currentBalancePaise || 0),
+    (sum, a) => sum + BigInt(Math.round(Number(a.currentBalancePaise || 0))),
     BigInt(0)
   );
 

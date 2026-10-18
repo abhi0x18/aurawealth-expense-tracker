@@ -96,6 +96,27 @@ export default function RecurringPage() {
     }
   };
 
+  const activeRules = rules.filter((r) => r.isActive);
+  const monthlyExpensePaise = activeRules
+    .filter((r) => r.type === "EXPENSE")
+    .reduce((sum, r) => {
+      const amt = BigInt(Math.round(Number(r.amountPaise || 0)));
+      if (r.frequency === "WEEKLY") return sum + amt * 4n;
+      if (r.frequency === "QUARTERLY") return sum + amt / 3n;
+      if (r.frequency === "YEARLY") return sum + amt / 12n;
+      return sum + amt;
+    }, 0n);
+
+  const monthlyIncomePaise = activeRules
+    .filter((r) => r.type === "INCOME")
+    .reduce((sum, r) => {
+      const amt = BigInt(Math.round(Number(r.amountPaise || 0)));
+      if (r.frequency === "WEEKLY") return sum + amt * 4n;
+      if (r.frequency === "QUARTERLY") return sum + amt / 3n;
+      if (r.frequency === "YEARLY") return sum + amt / 12n;
+      return sum + amt;
+    }, 0n);
+
   return (
     <AppShell>
       <div className="space-y-10 pb-16">
@@ -139,6 +160,50 @@ export default function RecurringPage() {
             </Button>
           </div>
         </div>
+
+        {/* Commitment Summary Metrics */}
+        {rules.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <Card className="p-6 rounded-3xl border border-slate-200/80 dark:border-white/10 shadow-lg bg-gradient-to-br from-white to-slate-50 dark:from-slate-900 dark:to-slate-950">
+              <div className="text-xs font-mono font-bold text-rose-500 uppercase tracking-wider flex items-center gap-2">
+                <ArrowUpRight className="w-4 h-4" />
+                Monthly Bills Commitment
+              </div>
+              <div className="text-3xl font-mono font-black text-rose-600 dark:text-rose-400 mt-2 tracking-tight">
+                {formatMoney(monthlyExpensePaise)}
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                Projected monthly automated debit
+              </p>
+            </Card>
+
+            <Card className="p-6 rounded-3xl border border-slate-200/80 dark:border-white/10 shadow-lg bg-gradient-to-br from-white to-slate-50 dark:from-slate-900 dark:to-slate-950">
+              <div className="text-xs font-mono font-bold text-emerald-500 uppercase tracking-wider flex items-center gap-2">
+                <ArrowDownLeft className="w-4 h-4" />
+                Monthly Scheduled Income
+              </div>
+              <div className="text-3xl font-mono font-black text-emerald-600 dark:text-emerald-400 mt-2 tracking-tight">
+                {formatMoney(monthlyIncomePaise)}
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                Regular salary &amp; dividend inflow
+              </p>
+            </Card>
+
+            <Card className="p-6 rounded-3xl border border-slate-200/80 dark:border-white/10 shadow-lg bg-gradient-to-br from-white to-slate-50 dark:from-slate-900 dark:to-slate-950">
+              <div className="text-xs font-mono font-bold text-indigo-500 uppercase tracking-wider flex items-center gap-2">
+                <Sparkles className="w-4 h-4" />
+                Active Automations
+              </div>
+              <div className="text-3xl font-mono font-black text-slate-900 dark:text-white mt-2 tracking-tight">
+                {activeRules.length} <span className="text-base font-normal text-slate-400">/ {rules.length}</span>
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                Rules scheduled to auto-post
+              </p>
+            </Card>
+          </div>
+        )}
 
         {/* Empty State */}
         {!loading && rules.length === 0 && (
@@ -218,17 +283,22 @@ export default function RecurringPage() {
                     {/* Merchant & Amount */}
                     <div className="mt-4">
                       <h4 className="text-base font-display font-extrabold text-slate-900 dark:text-white">
-                        {rule.merchant || rule.category?.name || "Recurring Item"}
+                        {rule.merchant || rule.category?.name || (isExpense ? "Recurring Expense" : "Recurring Income")}
                       </h4>
                       {rule.description && (
                         <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">{rule.description}</p>
                       )}
-                      <div
-                        className={`text-2xl font-mono font-black tracking-tight mt-3 ${
-                          isExpense ? "text-rose-600 dark:text-rose-400" : "text-emerald-600 dark:text-emerald-400"
-                        }`}
-                      >
-                        {formatMoney(rule.amountPaise)}
+                      <div className="flex items-baseline gap-2 mt-3">
+                        <span
+                          className={`text-2xl sm:text-3xl font-mono font-black tracking-tight ${
+                            isExpense ? "text-rose-600 dark:text-rose-400" : "text-emerald-600 dark:text-emerald-400"
+                          }`}
+                        >
+                          {formatMoney(rule.amountPaise)}
+                        </span>
+                        <span className="text-xs font-semibold text-slate-400 lowercase">
+                          /{rule.frequency?.toLowerCase()?.replace("ly", "") || "cycle"}
+                        </span>
                       </div>
                     </div>
                   </div>

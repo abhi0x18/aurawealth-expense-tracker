@@ -72,8 +72,8 @@ export default function GoalsPage() {
     }
   };
 
-  const totalSavedPaise = goals.reduce((acc, g) => acc + BigInt(g.currentAmountPaise || 0), BigInt(0));
-  const totalTargetPaise = goals.reduce((acc, g) => acc + BigInt(g.targetAmountPaise || 0), BigInt(0));
+  const totalSavedPaise = goals.reduce((acc, g) => acc + BigInt(Math.round(Number(g.currentAmountPaise || 0))), BigInt(0));
+  const totalTargetPaise = goals.reduce((acc, g) => acc + BigInt(Math.round(Number(g.targetAmountPaise || 0))), BigInt(0));
   const overallProgressPct = totalTargetPaise > BigInt(0) ? calculatePercentage(totalSavedPaise, totalTargetPaise) : 0;
 
   return (
@@ -167,8 +167,8 @@ export default function GoalsPage() {
         {goals.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {goals.map((goal) => {
-              const current = BigInt(goal.currentAmountPaise || 0);
-              const target = BigInt(goal.targetAmountPaise || 1);
+              const current = BigInt(Math.round(Number(goal.currentAmountPaise || 0)));
+              const target = BigInt(Math.max(1, Math.round(Number(goal.targetAmountPaise || 1))));
               const pct = calculatePercentage(current, target);
               const remaining = target > current ? target - current : BigInt(0);
               const isCompleted = goal.status === "COMPLETED" || current >= target;

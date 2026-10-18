@@ -28,7 +28,7 @@ export function paiseToRupees(paise: bigint | number | string | null | undefined
  * Formats integer paise into a readable Indian currency string (e.g., ₹1,50,000.00).
  */
 export function formatCurrency(
-  paise: bigint | number | null | undefined,
+  paise: bigint | number | string | null | undefined,
   options: {
     showSign?: boolean;
     showSymbol?: boolean;
@@ -43,11 +43,15 @@ export function formatCurrency(
     fractionDigits = 2,
   } = options;
 
-  if (paise === null || paise === undefined) {
+  if (paise === null || paise === undefined || paise === "") {
     return showSymbol ? `${APP_CONFIG.currency.symbol}0.00` : "0.00";
   }
 
-  const numericPaise = typeof paise === "bigint" ? Number(paise) : paise;
+  const numericPaise = typeof paise === "bigint" ? Number(paise) : Number(paise || 0);
+  if (isNaN(numericPaise)) {
+    return showSymbol ? `${APP_CONFIG.currency.symbol}0.00` : "0.00";
+  }
+
   const isNegative = numericPaise < 0;
   const absoluteRupees = Math.abs(numericPaise) / 100;
 

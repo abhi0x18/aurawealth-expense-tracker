@@ -40,12 +40,13 @@ export function RecurringRuleModal({
     if (isOpen) {
       setError(null);
       if (initialData) {
-        setType(initialData.type);
-        setAmount((Number(initialData.amountPaise) / 100).toString());
-        setFrequency(initialData.frequency);
-        setStartDate(format(new Date(initialData.startDate), "yyyy-MM-dd"));
+        setType(initialData.type || "EXPENSE");
+        const amt = initialData.amountPaise != null ? Number(initialData.amountPaise) / 100 : "";
+        setAmount(amt ? amt.toString() : "");
+        setFrequency(initialData.frequency || "MONTHLY");
+        setStartDate(initialData.startDate ? format(new Date(initialData.startDate), "yyyy-MM-dd") : format(new Date(), "yyyy-MM-dd"));
         setEndDate(initialData.endDate ? format(new Date(initialData.endDate), "yyyy-MM-dd") : "");
-        setAccountId(initialData.accountId);
+        setAccountId(initialData.accountId || (accounts.length > 0 ? accounts[0].id : ""));
         setCategoryId(initialData.categoryId || "");
         setMerchant(initialData.merchant || "");
         setDescription(initialData.description || "");
@@ -61,7 +62,14 @@ export function RecurringRuleModal({
         setDescription("");
       }
     }
-  }, [isOpen, initialData, accounts]);
+  }, [isOpen, initialData]);
+
+  // Auto-select first account if accounts loaded after modal opened
+  useEffect(() => {
+    if (isOpen && !accountId && accounts.length > 0) {
+      setAccountId(accounts[0].id);
+    }
+  }, [isOpen, accounts, accountId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -117,6 +125,16 @@ export function RecurringRuleModal({
   };
 
   const availableCategories = categories.filter((c) => c.type === type);
+
+  // Auto-switch category when switching between EXPENSE and INCOME
+  useEffect(() => {
+    if (availableCategories.length > 0 && categoryId) {
+      const match = availableCategories.some((c) => c.id === categoryId);
+      if (!match) {
+        setCategoryId(availableCategories[0].id);
+      }
+    }
+  }, [type, availableCategories, categoryId]);
 
   return (
     <Modal
@@ -210,6 +228,7 @@ export function RecurringRuleModal({
               onChange={(e) => setAccountId(e.target.value)}
               className="w-full px-3.5 py-2 text-sm bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 text-slate-900 dark:text-slate-100"
             >
+              <option value="" disabled>Select Account</option>
               {accounts.map((acc) => (
                 <option key={acc.id} value={acc.id}>
                   {acc.name}

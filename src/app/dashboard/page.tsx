@@ -81,8 +81,9 @@ export default function DashboardPage() {
     try {
       // Find first active account or fallback
       const accRes = await fetch("/api/accounts");
-      const accounts = await accRes.json();
-      const targetAcc = accounts[0]?.id;
+      const accData = await accRes.json();
+      const targetAcc = accData.accounts?.[0]?.id;
+      if (!targetAcc) return;
 
       await fetch("/api/transactions", {
         method: "POST",
@@ -90,7 +91,8 @@ export default function DashboardPage() {
         body: JSON.stringify({
           type: "INCOME",
           amount: 50000,
-          description: "Performance Bonus & Dividend Drop",
+          merchant: "Performance Bonus & Dividend Drop",
+          notes: "Simulated bonus drop",
           date: new Date().toISOString(),
           accountId: targetAcc,
         }),

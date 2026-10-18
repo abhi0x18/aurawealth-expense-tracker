@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { APP_CONFIG } from "@/config/app";
+import { CurrencyProvider } from "@/context/CurrencyContext";
 
 export const metadata: Metadata = {
   title: "AuraWealth 3D — Next-Gen Spatial Expense & Wealth OS",
@@ -54,7 +55,9 @@ export default function RootLayout({
       <body
         className="font-sans antialiased text-slate-900 dark:text-slate-100 min-h-screen selection:bg-emerald-500 selection:text-white"
       >
-        {children}
+        <CurrencyProvider>
+          {children}
+        </CurrencyProvider>
       </body>
     </html>
   );

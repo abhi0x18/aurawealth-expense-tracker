@@ -63,8 +63,7 @@ export function AppShell({ children, user }: AppShellProps) {
   }, []);
 
   return (
-    <CurrencyProvider>
-      <div className="min-h-screen bg-slate-50 dark:bg-[#070b14] text-slate-900 dark:text-slate-100 flex flex-col lg:flex-row relative overflow-x-hidden">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#070b14] text-slate-900 dark:text-slate-100 flex flex-col lg:flex-row relative overflow-x-hidden">
         {/* Ambient Spatial Mesh Gradient Glow */}
         <div className="ambient-mesh" />
 
@@ -103,6 +102,5 @@ export function AppShell({ children, user }: AppShellProps) {
           onClose={() => setSearchOpen(false)}
         />
       </div>
-    </CurrencyProvider>
   );
 }

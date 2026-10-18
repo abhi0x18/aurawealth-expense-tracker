@@ -100,27 +100,33 @@ export async function POST(req: Request) {
     const body = await req.json();
     const validated = CreateBudgetSchema.parse(body);
 
-    const budget = await db.budget.upsert({
+    const existing = await db.budget.findFirst({
       where: {
-        userId_categoryId_monthYear: {
-          userId: user.id,
-          categoryId: validated.categoryId || "",
-          monthYear: validated.monthYear,
-        },
-      },
-      update: {
-        amountPaise: rupeesToPaise(validated.amount),
-        alertThreshold: validated.alertThreshold,
-      },
-      create: {
         userId: user.id,
         categoryId: validated.categoryId || null,
         monthYear: validated.monthYear,
-        amountPaise: rupeesToPaise(validated.amount),
-        alertThreshold: validated.alertThreshold,
       },
-      include: { category: true },
     });
+
+    const budget = existing
+      ? await db.budget.update({
+          where: { id: existing.id },
+          data: {
+            amountPaise: rupeesToPaise(validated.amount),
+            alertThreshold: validated.alertThreshold,
+          },
+          include: { category: true },
+        })
+      : await db.budget.create({
+          data: {
+            userId: user.id,
+            categoryId: validated.categoryId || null,
+            monthYear: validated.monthYear,
+            amountPaise: rupeesToPaise(validated.amount),
+            alertThreshold: validated.alertThreshold,
+          },
+          include: { category: true },
+        });
 
     return NextResponse.json({ success: true, budget }, { status: 201 });
   } catch (err: any) {

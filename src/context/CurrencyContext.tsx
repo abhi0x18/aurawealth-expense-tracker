@@ -9,7 +9,7 @@ interface CurrencyContextType {
   currency: CurrencyCode;
   setCurrency: (c: CurrencyCode) => void;
   currencySymbol: string;
-  formatMoney: (paise: bigint | number | null | undefined, options?: { showSign?: boolean; compact?: boolean }) => string;
+  formatMoney: (paise: bigint | number | string | null | undefined, options?: { showSign?: boolean; compact?: boolean }) => string;
 }
 
 const RATES: Record<CurrencyCode, { rate: number; symbol: string; locale: string }> = {
@@ -22,7 +22,7 @@ const CurrencyContext = createContext<CurrencyContextType>({
   currency: "INR",
   setCurrency: () => {},
   currencySymbol: "₹",
-  formatMoney: () => "₹0.00",
+  formatMoney: (paise, options) => baseFormatCurrency(paise, options),
 });
 
 export function CurrencyProvider({ children }: { children: React.ReactNode }) {
@@ -45,12 +45,14 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
   };
 
   const formatMoney = (
-    paise: bigint | number | null | undefined,
+    paise: bigint | number | string | null | undefined,
     options: { showSign?: boolean; compact?: boolean } = {}
   ): string => {
-    if (paise === null || paise === undefined) return `${RATES[currency].symbol}0.00`;
+    if (paise === null || paise === undefined || paise === "") return `${RATES[currency].symbol}0.00`;
 
-    const rawPaise = typeof paise === "bigint" ? Number(paise) : paise;
+    const rawPaise = typeof paise === "bigint" ? Number(paise) : Number(paise || 0);
+    if (isNaN(rawPaise)) return `${RATES[currency].symbol}0.00`;
+
     const isNegative = rawPaise < 0;
     const absPaise = Math.abs(rawPaise);
 

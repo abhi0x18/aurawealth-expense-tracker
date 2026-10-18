@@ -3,6 +3,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { UpdateRecurringRuleSchema } from "@/lib/validations/recurring";
 import { rupeesToPaise } from "@/lib/money";
+import { processDueRecurringRules } from "@/lib/recurring";
 
 export async function PUT(req: Request, { params }: { params: { id: string } }) {
   const user = await getCurrentUser();
@@ -28,6 +29,14 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     if (validated.merchant !== undefined) updateData.merchant = validated.merchant;
     if (validated.description !== undefined) updateData.description = validated.description;
     if (validated.isActive !== undefined) updateData.isActive = validated.isActive;
+    if (validated.startDate !== undefined) {
+      const newStart = new Date(validated.startDate);
+      updateData.startDate = newStart;
+      // If start date was shifted into future, align nextDueDate
+      if (newStart > new Date()) {
+        updateData.nextDueDate = newStart;
+      }
+    }
     if (validated.endDate !== undefined) {
       updateData.endDate = validated.endDate ? new Date(validated.endDate) : null;
     }
@@ -37,6 +46,10 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
       data: updateData,
       include: { account: true, category: true },
     });
+
+    if (updated.isActive) {
+      await processDueRecurringRules(user.id);
+    }
 
     return NextResponse.json({ success: true, rule: updated });
   } catch (err: any) {
