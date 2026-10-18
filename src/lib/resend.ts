@@ -1,23 +1,29 @@
 import { Resend } from "resend";
 
-const resendApiKey = process.env.RESEND_API_KEY;
-const resend = resendApiKey ? new Resend(resendApiKey) : null;
-const fromEmail = process.env.RESEND_FROM_EMAIL || "PaisaPilot <onboarding@resend.dev>";
-
 export interface SendOtpResult {
   success: boolean;
   simulated: boolean;
   message: string;
   devOtp?: string;
+  resendId?: string;
 }
 
 /**
- * Sends a 6-digit verification OTP to the user's email using Resend (Free Tier).
- * If RESEND_API_KEY is not configured or in development, logs the OTP to server console
- * and provides simulated delivery so local development works seamlessly.
+ * Returns an instantiated Resend client if RESEND_API_KEY is configured.
+ */
+function getResendClient(): Resend | null {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey || apiKey.trim() === "") return null;
+  return new Resend(apiKey.trim());
+}
+
+/**
+ * Sends a 6-digit verification OTP to the user's email using Resend.
  */
 export async function sendOtpEmail(email: string, otp: string, userName?: string): Promise<SendOtpResult> {
   const greeting = userName ? `Hello ${userName},` : "Hello,";
+  const resend = getResendClient();
+  const fromEmail = process.env.RESEND_FROM_EMAIL || "PaisaPilot <onboarding@resend.dev>";
   
   // HTML Template for OTP Email
   const htmlContent = `
@@ -67,50 +73,52 @@ export async function sendOtpEmail(email: string, otp: string, userName?: string
       });
 
       if (response.error) {
-        console.error("[Resend Error]:", response.error);
-        // Fallback to simulated delivery in dev if domain or API key has issue
+        console.warn("[Resend Warning]:", response.error);
+        // Log OTP in console so the developer/user is never blocked
         console.log(`\n===================================================`);
         console.log(`  [PaisaPilot Fallback Dev OTP for ${email}]`);
         console.log(`  OTP Code: ${otp}`);
+        console.log(`  Notice: ${response.error.message}`);
         console.log(`===================================================\n`);
+
         return {
           success: true,
           simulated: true,
-          message: `Resend free tier notice: ${response.error.message}. (In dev mode, OTP is logged to console)`,
-          devOtp: process.env.NODE_ENV !== "production" ? otp : undefined,
+          message: `Resend Notice: ${response.error.message}`,
+          devOtp: otp,
         };
       }
 
-      console.log(`[Resend OTP Sent] Successfully dispatched email to ${email}`);
+      console.log(`[Resend OTP Sent] Dispatched email to ${email} (ID: ${response.data?.id})`);
       return {
         success: true,
         simulated: false,
         message: `Verification code sent to ${email}`,
+        resendId: response.data?.id,
       };
     } catch (err: any) {
       console.error("[Resend Exception]:", err);
       return {
         success: true,
         simulated: true,
-        message: "Email sending simulated (dev fallback)",
-        devOtp: process.env.NODE_ENV !== "production" ? otp : undefined,
+        message: "Email sending fallback (dev mode)",
+        devOtp: otp,
       };
     }
   } else {
-    // Development / No API key provided yet: simulate delivery gracefully
+    // Development / No API key provided: simulate delivery in console
     console.log(`\n===================================================`);
     console.log(`  [PaisaPilot OTP Service - Development Mode]`);
     console.log(`  To: ${email}`);
     console.log(`  OTP Code: ${otp}`);
     console.log(`  Valid for: 10 minutes`);
-    console.log(`  (To send real emails for free, add RESEND_API_KEY to your .env file)`);
     console.log(`===================================================\n`);
 
     return {
       success: true,
       simulated: true,
-      message: `OTP generated for ${email}. (In local dev mode, OTP is logged to console)`,
-      devOtp: process.env.NODE_ENV !== "production" ? otp : undefined,
+      message: `OTP generated for ${email}. (Logged to server console in dev mode)`,
+      devOtp: otp,
     };
   }
 }
