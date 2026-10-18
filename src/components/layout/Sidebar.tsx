@@ -25,7 +25,7 @@ interface SidebarProps {
 }
 
 const NAV_ITEMS = [
-  { href: "/", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/transactions", label: "Transactions", icon: ArrowLeftRight },
   { href: "/accounts", label: "Accounts & Cards", icon: Landmark },
   { href: "/budgets", label: "Budgets", icon: PieChart },
@@ -34,6 +34,7 @@ const NAV_ITEMS = [
   { href: "/reports", label: "Reports & Analytics", icon: BarChart3 },
   { href: "/categories", label: "Categories & Tags", icon: Tags },
   { href: "/settings", label: "Settings", icon: Settings },
+  { href: "/", label: "Cashflow Intro", icon: Sparkles },
 ];
 
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
@@ -60,7 +61,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
         {/* Brand Header */}
         <div className="h-20 flex items-center justify-between px-6 border-b border-slate-200/70 dark:border-white/10 relative z-10">
-          <Link href="/" className="flex items-center gap-3.5 group focus:outline-none" onClick={onClose}>
+          <Link href="/dashboard" className="flex items-center gap-3.5 group focus:outline-none" onClick={onClose}>
             <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-500 via-teal-400 to-indigo-600 p-0.5 shadow-lg shadow-emerald-500/25 group-hover:rotate-12 transition-transform duration-300 shrink-0">
               <div className="w-full h-full bg-white dark:bg-slate-900 rounded-[14px] flex items-center justify-center">
                 <Layers className="w-6 h-6 text-emerald-500" />
@@ -94,7 +95,9 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           {NAV_ITEMS.map((item) => {
             const Icon = item.icon;
             const isActive =
-              item.href === "/"
+              item.href === "/dashboard"
+                ? pathname === "/dashboard"
+                : item.href === "/"
                 ? pathname === "/"
                 : pathname.startsWith(item.href);
 

@@ -4,12 +4,14 @@ import type { NextRequest } from "next/server";
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Allow static files, api auth endpoints, favicon, etc.
+  // Allow static files, api auth endpoints, favicon, images, setup, login, and root intro page
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/api/auth") ||
+    pathname === "/" ||
     pathname === "/setup" ||
     pathname === "/login" ||
+    pathname.startsWith("/images") ||
     pathname.includes(".")
   ) {
     return NextResponse.next();

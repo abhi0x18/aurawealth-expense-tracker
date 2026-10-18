@@ -5,31 +5,13 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Vault3DProp } from "@/components/ui/FinancialProps";
-import { CashflowIntroScreen } from "@/components/ui/CashflowIntroScreen";
+import Link from "next/link";
 import { Layers, Mail, Lock, KeyRound, Sparkles, ArrowRight, RefreshCw, CheckCircle2, ShieldCheck, Play } from "lucide-react";
 import { triggerConfetti } from "@/lib/confetti";
 
 export default function LoginPage() {
   const router = useRouter();
   const [authMode, setAuthMode] = useState<"otp" | "password">("otp");
-  const [showIntro, setShowIntro] = useState(false);
-
-  // Check if first-time visit in this session
-  useEffect(() => {
-    try {
-      const seen = sessionStorage.getItem("cashflow_intro_seen");
-      if (!seen) {
-        setShowIntro(true);
-      }
-    } catch (_) {}
-  }, []);
-
-  const handleIntroBegin = () => {
-    setShowIntro(false);
-    try {
-      sessionStorage.setItem("cashflow_intro_seen", "true");
-    } catch (_) {}
-  };
   
   // Password Mode state
   const [email, setEmail] = useState("");
@@ -54,7 +36,7 @@ export default function LoginPage() {
         if (data.needsSetup) {
           router.replace("/setup");
         } else if (data.authenticated) {
-          router.replace("/");
+          router.replace("/dashboard");
         } else {
           setCheckingAuth(false);
         }
@@ -90,7 +72,7 @@ export default function LoginPage() {
       }
 
       triggerConfetti();
-      router.push("/");
+      router.push("/dashboard");
       router.refresh();
     } catch (err: any) {
       setError(err.message || "Failed to sign in");
@@ -163,7 +145,7 @@ export default function LoginPage() {
       }
 
       triggerConfetti();
-      router.push("/");
+      router.push("/dashboard");
       router.refresh();
     } catch (err: any) {
       setError(err.message || "Verification failed");
@@ -411,24 +393,17 @@ export default function LoginPage() {
           </form>
         )}
 
-        {/* Replay Cashflow Intro Trigger */}
+        {/* Link back to Cashflow Simulator Intro */}
         <div className="mt-6 text-center">
-          <button
-            type="button"
-            onClick={() => setShowIntro(true)}
-            className="inline-flex items-center gap-2 text-xs font-bold text-amber-300 hover:text-amber-200 transition-colors uppercase tracking-wider px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/25 shadow-sm"
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-xs font-bold text-amber-300 hover:text-amber-200 transition-colors uppercase tracking-wider px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/25 shadow-sm hover:scale-105 active:scale-95"
           >
             <Play className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-            <span>Watch Cashflow Intro</span>
-          </button>
+            <span>← Return to Cashflow Simulator</span>
+          </Link>
         </div>
       </div>
-
-      {/* Cinematic Golden Cashflow Intro Screen */}
-      <CashflowIntroScreen
-        isOpen={showIntro}
-        onBegin={handleIntroBegin}
-      />
     </div>
   );
 }
