@@ -116,62 +116,103 @@ export default function DownloadAppPage() {
         )}
 
         {/* ================= PRIMARY APP DOWNLOAD TILES ================= */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
           {/* Card 1: 1-Click Browser PWA Install */}
-          <div className="p-8 rounded-3xl glass-panel border border-emerald-500/30 flex flex-col justify-between space-y-6 hover:border-emerald-500/60 transition-all shadow-2xl relative overflow-hidden group">
+          <div className="p-7 rounded-3xl glass-panel border border-emerald-500/30 flex flex-col justify-between space-y-6 hover:border-emerald-500/60 transition-all shadow-2xl relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-36 h-36 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-all" />
             
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 flex items-center justify-center font-black text-2xl shadow-lg">
+                <div className="w-13 h-13 p-3 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 flex items-center justify-center font-black text-2xl shadow-lg">
                   <Laptop className="w-7 h-7 text-slate-950" />
                 </div>
                 <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                  Recommended
+                  Universal
                 </span>
               </div>
               <div>
-                <h3 className="text-2xl font-black text-white font-display">
-                  One-Click App Install
+                <h3 className="text-xl font-black text-white font-display">
+                  One-Click Install
                 </h3>
-                <p className="text-sm text-slate-300 mt-2 leading-relaxed">
-                  Directly installs AuraWealth as a standalone application on <strong>Windows</strong>, <strong>Mac</strong>, <strong>Android</strong>, or <strong>ChromeOS</strong>. Launches in its own independent window with desktop icon.
+                <p className="text-xs text-slate-300 mt-2 leading-relaxed">
+                  Installs immediately in standalone window mode on <strong>Windows</strong>, <strong>Mac</strong>, or <strong>ChromeOS</strong> with desktop badge.
                 </p>
               </div>
 
-              <div className="space-y-2 pt-2">
+              <div className="space-y-1.5 pt-2">
                 <div className="flex items-center gap-2 text-xs text-slate-300">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>No downloads required • Instant installation</span>
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                  <span>0 download required • Instant setup</span>
                 </div>
                 <div className="flex items-center gap-2 text-xs text-slate-300">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>Appears on Desktop, Start Menu & Taskbar</span>
-                </div>
-                <div className="flex items-center gap-2 text-xs text-slate-300">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>Offline caching & background synchronization</span>
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                  <span>Desktop & Taskbar standalone icon</span>
                 </div>
               </div>
             </div>
 
             <button
               onClick={handlePwaInstall}
-              className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-500 hover:opacity-95 text-slate-950 font-black text-base flex items-center justify-center gap-3 shadow-xl shadow-emerald-500/25 active:scale-98 transition-all"
+              className="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-500 hover:opacity-95 text-slate-950 font-black text-sm flex items-center justify-center gap-2 shadow-xl shadow-emerald-500/25 active:scale-98 transition-all"
             >
-              <Download className="w-5 h-5 stroke-[2.5]" />
-              <span>{deferredPrompt ? "Install App On This Device" : "Install Browser App"}</span>
+              <Download className="w-4 h-4 stroke-[2.5]" />
+              <span>{deferredPrompt ? "Install On Device" : "Install Browser App"}</span>
             </button>
           </div>
 
-          {/* Card 2: Windows Desktop Standalone Installer (.BAT) */}
-          <div className="p-8 rounded-3xl glass-panel border border-amber-500/30 flex flex-col justify-between space-y-6 hover:border-amber-500/60 transition-all shadow-2xl relative overflow-hidden group">
+          {/* Card 2: Android APK Download (.apk) */}
+          <div className="p-7 rounded-3xl glass-panel border border-teal-500/30 flex flex-col justify-between space-y-6 hover:border-teal-500/60 transition-all shadow-2xl relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-36 h-36 bg-teal-500/10 rounded-full blur-2xl group-hover:bg-teal-500/20 transition-all" />
+
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="w-13 h-13 p-3 rounded-2xl bg-gradient-to-tr from-teal-400 to-emerald-400 text-slate-950 flex items-center justify-center font-black text-2xl shadow-lg">
+                  <Smartphone className="w-7 h-7 text-slate-950" />
+                </div>
+                <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-teal-500/20 text-teal-300 border border-teal-500/30">
+                  Android APK
+                </span>
+              </div>
+              <div>
+                <h3 className="text-xl font-black text-white font-display">
+                  Android App (.apk)
+                </h3>
+                <p className="text-xs text-slate-300 mt-2 leading-relaxed">
+                  Download the standalone Android <strong>.apk</strong> package to install directly on your Android phone or tablet.
+                </p>
+              </div>
+
+              <div className="space-y-1.5 pt-2">
+                <div className="flex items-center gap-2 text-xs text-slate-300">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-teal-400 shrink-0" />
+                  <span>Native APK with Hardware WebGL</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-slate-300">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-teal-400 shrink-0" />
+                  <span>Install on any Android 8.0+ device</span>
+                </div>
+              </div>
+            </div>
+
+            <a
+              href="https://github.com/abhi0x18/aurawealth-expense-tracker/releases/latest"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-teal-400 via-emerald-400 to-teal-400 hover:opacity-95 text-slate-950 font-black text-sm flex items-center justify-center gap-2 shadow-xl shadow-teal-500/25 active:scale-98 transition-all"
+            >
+              <Download className="w-4 h-4 stroke-[2.5]" />
+              <span>Download Android APK</span>
+            </a>
+          </div>
+
+          {/* Card 3: Windows Desktop Standalone Installer (.BAT) */}
+          <div className="p-7 rounded-3xl glass-panel border border-amber-500/30 flex flex-col justify-between space-y-6 hover:border-amber-500/60 transition-all shadow-2xl relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-36 h-36 bg-amber-500/10 rounded-full blur-2xl group-hover:bg-amber-500/20 transition-all" />
 
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-400 to-orange-400 text-slate-950 flex items-center justify-center font-black text-2xl shadow-lg">
+                <div className="w-13 h-13 p-3 rounded-2xl bg-gradient-to-tr from-amber-400 to-orange-400 text-slate-950 flex items-center justify-center font-black text-2xl shadow-lg">
                   <Monitor className="w-7 h-7 text-slate-950" />
                 </div>
                 <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
@@ -179,26 +220,22 @@ export default function DownloadAppPage() {
                 </span>
               </div>
               <div>
-                <h3 className="text-2xl font-black text-white font-display">
-                  Windows Desktop Package
+                <h3 className="text-xl font-black text-white font-display">
+                  Windows Desktop
                 </h3>
-                <p className="text-sm text-slate-300 mt-2 leading-relaxed">
-                  Download the automated Windows Desktop shortcut installer. Double-click the file to immediately create a <strong>Desktop App icon</strong> and launch in standalone app mode.
+                <p className="text-xs text-slate-300 mt-2 leading-relaxed">
+                  Automated Windows Desktop shortcut script that launches in dedicated 1366x860 app-window mode.
                 </p>
               </div>
 
-              <div className="space-y-2 pt-2">
+              <div className="space-y-1.5 pt-2">
                 <div className="flex items-center gap-2 text-xs text-slate-300">
-                  <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
-                  <span>Creates Windows Desktop icon: <code>AuraWealth 3D Cockpit</code></span>
+                  <CheckCircle2 className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                  <span>Desktop icon: AuraWealth 3D</span>
                 </div>
                 <div className="flex items-center gap-2 text-xs text-slate-300">
-                  <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
-                  <span>Opens full standalone 1366x860 cockpit window</span>
-                </div>
-                <div className="flex items-center gap-2 text-xs text-slate-300">
-                  <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
-                  <span>Compatible with Windows 10 & 11 (Edge / Chrome)</span>
+                  <CheckCircle2 className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                  <span>Opens without browser URL or tab bar</span>
                 </div>
               </div>
             </div>
@@ -206,10 +243,10 @@ export default function DownloadAppPage() {
             <a
               href="/downloads/AuraWealth-Desktop-Installer.bat"
               download="AuraWealth-Desktop-Installer.bat"
-              className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-400 via-yellow-400 to-orange-400 hover:opacity-95 text-slate-950 font-black text-base flex items-center justify-center gap-3 shadow-xl shadow-amber-500/25 active:scale-98 transition-all"
+              className="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-amber-400 via-yellow-400 to-orange-400 hover:opacity-95 text-slate-950 font-black text-sm flex items-center justify-center gap-2 shadow-xl shadow-amber-500/25 active:scale-98 transition-all"
             >
-              <Download className="w-5 h-5 stroke-[2.5]" />
-              <span>Download Windows Installer (.bat)</span>
+              <Download className="w-4 h-4 stroke-[2.5]" />
+              <span>Download Windows (.bat)</span>
             </a>
           </div>
 
