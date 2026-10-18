@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { RecurringRuleModal } from "@/components/recurring/RecurringRuleModal";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { formatCurrency } from "@/lib/money";
+import { useCurrency } from "@/context/CurrencyContext";
+import { triggerConfetti } from "@/lib/confetti";
 import { formatDate } from "@/lib/date";
 import {
   Repeat,
@@ -20,10 +21,11 @@ import {
   ArrowUpRight,
   ArrowDownLeft,
   RefreshCw,
-  CheckCircle2,
+  Sparkles,
 } from "lucide-react";
 
 export default function RecurringPage() {
+  const { formatMoney } = useCurrency();
   const [rules, setRules] = useState<any[]>([]);
   const [accounts, setAccounts] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
@@ -88,6 +90,7 @@ export default function RecurringPage() {
     try {
       await fetch("/api/recurring");
       await fetchRules();
+      triggerConfetti();
     } finally {
       setProcessing(false);
     }
@@ -95,27 +98,30 @@ export default function RecurringPage() {
 
   return (
     <AppShell>
-      <div className="space-y-6">
+      <div className="space-y-10 pb-16">
         {/* Top Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
           <div>
-            <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight">
-              Recurring Transactions & Bills
+            <h1 className="text-3xl sm:text-4xl font-display font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-3">
+              Recurring &amp; Bills
+              <span className="text-xs px-3 py-1 rounded-full bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 font-mono font-bold border border-indigo-500/30">
+                Automated Ledger
+              </span>
             </h1>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              Scheduled subscriptions, rent, insurance, and salary with automated idempotent posting
+            <p className="text-sm sm:text-base text-slate-500 dark:text-slate-400 mt-1 font-normal">
+              Scheduled subscriptions, rent, insurance, and salary with automated idempotent posting.
             </p>
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-3">
             <Button
               onClick={handleRunProcessing}
               variant="outline"
               size="md"
-              className="rounded-xl font-semibold"
+              className="rounded-2xl font-bold text-sm px-5 py-3 border-slate-200 dark:border-white/10 hover:border-emerald-500/50 shadow-sm"
               loading={processing}
             >
-              <RefreshCw className="w-3.5 h-3.5" />
+              <RefreshCw className="w-4 h-4 text-emerald-500" />
               Check Due Now
             </Button>
 
@@ -126,9 +132,9 @@ export default function RecurringPage() {
               }}
               variant="primary"
               size="md"
-              className="rounded-xl font-semibold shadow-sm"
+              className="rounded-2xl font-bold text-sm px-6 py-3 shadow-xl shadow-emerald-500/25 hover:scale-105 active:scale-95 transition-all"
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="w-5 h-5 stroke-[2.5]" />
               New Rule
             </Button>
           </div>
@@ -147,7 +153,7 @@ export default function RecurringPage() {
 
         {/* Rules List */}
         {rules.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {rules.map((rule) => {
               const isExpense = rule.type === "EXPENSE";
 
@@ -155,7 +161,7 @@ export default function RecurringPage() {
                 <Card
                   key={rule.id}
                   hover
-                  className={`flex flex-col justify-between ${
+                  className={`flex flex-col justify-between p-6 rounded-3xl border border-slate-200/80 dark:border-white/10 shadow-xl ${
                     !rule.isActive ? "opacity-60 bg-slate-50 dark:bg-slate-900/40" : ""
                   }`}
                 >
@@ -164,17 +170,17 @@ export default function RecurringPage() {
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-2">
                         {isExpense ? (
-                          <Badge variant="danger" size="sm">
-                            <ArrowUpRight className="w-3 h-3" />
+                          <Badge variant="danger" size="sm" className="font-mono font-bold text-xs">
+                            <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5]" />
                             Expense
                           </Badge>
                         ) : (
-                          <Badge variant="success" size="sm">
-                            <ArrowDownLeft className="w-3 h-3" />
+                          <Badge variant="success" size="sm" className="font-mono font-bold text-xs">
+                            <ArrowDownLeft className="w-3.5 h-3.5 stroke-[2.5]" />
                             Income
                           </Badge>
                         )}
-                        <Badge variant="neutral" size="sm">
+                        <Badge variant="neutral" size="sm" className="font-mono font-bold text-xs uppercase">
                           {rule.frequency}
                         </Badge>
                       </div>
@@ -183,12 +189,12 @@ export default function RecurringPage() {
                         <button
                           onClick={() => handleToggleActive(rule)}
                           title={rule.isActive ? "Pause rule" : "Resume rule"}
-                          className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-lg"
+                          className="p-2 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                         >
                           {rule.isActive ? (
-                            <Pause className="w-3.5 h-3.5" />
+                            <Pause className="w-4 h-4 text-amber-500" />
                           ) : (
-                            <Play className="w-3.5 h-3.5 text-emerald-600" />
+                            <Play className="w-4 h-4 text-emerald-500" />
                           )}
                         </button>
                         <button
@@ -196,57 +202,57 @@ export default function RecurringPage() {
                             setEditingRule(rule);
                             setModalOpen(true);
                           }}
-                          className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-lg"
+                          className="p-2 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                         >
-                          <Edit2 className="w-3.5 h-3.5" />
+                          <Edit2 className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleDelete(rule.id)}
-                          className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg"
+                          className="p-2 text-slate-400 hover:text-rose-600 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
                         >
-                          <Trash2 className="w-3.5 h-3.5" />
+                          <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
                     </div>
 
                     {/* Merchant & Amount */}
-                    <div className="mt-3">
-                      <h4 className="text-base font-bold text-slate-900 dark:text-slate-100">
+                    <div className="mt-4">
+                      <h4 className="text-base font-display font-extrabold text-slate-900 dark:text-white">
                         {rule.merchant || rule.category?.name || "Recurring Item"}
                       </h4>
                       {rule.description && (
-                        <p className="text-xs text-slate-400 mt-0.5">{rule.description}</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">{rule.description}</p>
                       )}
                       <div
-                        className={`text-xl font-black tracking-tight mt-2 ${
+                        className={`text-2xl font-mono font-black tracking-tight mt-3 ${
                           isExpense ? "text-rose-600 dark:text-rose-400" : "text-emerald-600 dark:text-emerald-400"
                         }`}
                       >
-                        {formatCurrency(rule.amountPaise)}
+                        {formatMoney(rule.amountPaise)}
                       </div>
                     </div>
                   </div>
 
                   {/* Footer details: Next due date & account */}
-                  <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-500 space-y-1">
+                  <div className="mt-5 pt-4 border-t border-slate-100 dark:border-white/10 text-xs sm:text-sm text-slate-500 dark:text-slate-400 space-y-1.5">
                     <div className="flex items-center justify-between">
                       <span className="flex items-center gap-1.5 font-medium">
-                        <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                        <Calendar className="w-4 h-4 text-slate-400" />
                         Next Due:
                       </span>
-                      <span className="font-bold text-slate-800 dark:text-slate-200">
+                      <span className="font-mono font-bold text-slate-800 dark:text-slate-200">
                         {formatDate(rule.nextDueDate)}
                       </span>
                     </div>
 
                     <div className="flex items-center justify-between">
-                      <span className="text-slate-400">Account:</span>
-                      <span className="font-medium text-slate-700 dark:text-slate-300">
+                      <span className="text-slate-400 font-medium">Account:</span>
+                      <span className="font-semibold text-slate-700 dark:text-slate-200">
                         {rule.account?.name}
                       </span>
                     </div>
 
-                    <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1">
+                    <div className="flex items-center justify-between text-xs text-slate-400 pt-1 font-medium">
                       <span>Status: {rule.isActive ? "Active" : "Paused"}</span>
                       <span>{rule._count?.generatedTransactions || 0} posted</span>
                     </div>
@@ -261,7 +267,10 @@ export default function RecurringPage() {
       <RecurringRuleModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
-        onSuccess={fetchRules}
+        onSuccess={() => {
+          triggerConfetti();
+          fetchRules();
+        }}
         accounts={accounts}
         categories={categories}
         initialData={editingRule}

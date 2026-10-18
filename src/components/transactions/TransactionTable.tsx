@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { formatCurrency } from "@/lib/money";
+import { useCurrency } from "@/context/CurrencyContext";
 import { formatDate } from "@/lib/date";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
@@ -41,6 +41,7 @@ export function TransactionTable({
   onExport,
   onImport,
 }: TransactionTableProps) {
+  const { formatMoney } = useCurrency();
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const confirmDelete = async (id: string) => {
@@ -55,19 +56,20 @@ export function TransactionTable({
   };
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm">
+    <div className="glass-panel rounded-3xl overflow-hidden border border-slate-200/80 dark:border-white/10 shadow-xl">
       {/* Header action bar */}
-      <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
-        <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">
-          Showing {transactions.length} of {pagination.totalCount} transactions
+      <div className="p-5 border-b border-slate-200/70 dark:border-white/10 flex flex-wrap items-center justify-between gap-4">
+        <div className="text-sm font-semibold text-slate-600 dark:text-slate-300">
+          Showing <span className="font-mono font-bold text-slate-900 dark:text-white">{transactions.length}</span> of{" "}
+          <span className="font-mono font-bold text-slate-900 dark:text-white">{pagination.totalCount}</span> ledger entries
         </div>
-        <div className="flex items-center gap-2">
-          <Button onClick={onImport} variant="outline" size="sm">
-            <Upload className="w-3.5 h-3.5" />
+        <div className="flex items-center gap-3">
+          <Button onClick={onImport} variant="outline" size="sm" className="rounded-xl font-bold text-xs gap-2">
+            <Upload className="w-4 h-4 text-emerald-500" />
             Import CSV
           </Button>
-          <Button onClick={onExport} variant="outline" size="sm">
-            <Download className="w-3.5 h-3.5" />
+          <Button onClick={onExport} variant="outline" size="sm" className="rounded-xl font-bold text-xs gap-2">
+            <Download className="w-4 h-4 text-indigo-500" />
             Export CSV
           </Button>
         </div>
@@ -77,20 +79,20 @@ export function TransactionTable({
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-slate-50/75 dark:bg-slate-800/40 text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider border-b border-slate-100 dark:border-slate-800">
-              <th className="py-3 px-4">Type</th>
-              <th className="py-3 px-4">Date</th>
-              <th className="py-3 px-4">Merchant / Note</th>
-              <th className="py-3 px-4">Category</th>
-              <th className="py-3 px-4">Account</th>
-              <th className="py-3 px-4 text-right">Amount</th>
-              <th className="py-3 px-4 text-center">Actions</th>
+            <tr className="bg-slate-50/80 dark:bg-slate-900/60 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider border-b border-slate-200/70 dark:border-white/10">
+              <th className="py-4 px-5">Type</th>
+              <th className="py-4 px-5">Date</th>
+              <th className="py-4 px-5">Description / Merchant</th>
+              <th className="py-4 px-5">Category</th>
+              <th className="py-4 px-5">Account</th>
+              <th className="py-4 px-5 text-right">Amount</th>
+              <th className="py-4 px-5 text-center">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
+          <tbody className="divide-y divide-slate-100 dark:divide-slate-800/80 text-sm">
             {transactions.length === 0 ? (
               <tr>
-                <td colSpan={7} className="py-12 text-center text-slate-400">
+                <td colSpan={7} className="py-16 text-center text-slate-400 text-sm font-medium">
                   No transactions found matching your criteria.
                 </td>
               </tr>
@@ -103,78 +105,78 @@ export function TransactionTable({
                 return (
                   <tr
                     key={tx.id}
-                    className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors"
+                    className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors"
                   >
                     {/* Type Badge */}
-                    <td className="py-3 px-4 whitespace-nowrap">
+                    <td className="py-4 px-5 whitespace-nowrap">
                       {isExpense && (
-                        <Badge variant="danger" size="sm">
-                          <ArrowUpRight className="w-3 h-3" />
+                        <Badge variant="danger" size="sm" className="font-mono font-bold text-xs px-2.5 py-1">
+                          <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5]" />
                           Expense
                         </Badge>
                       )}
                       {isIncome && (
-                        <Badge variant="success" size="sm">
-                          <ArrowDownLeft className="w-3 h-3" />
+                        <Badge variant="success" size="sm" className="font-mono font-bold text-xs px-2.5 py-1">
+                          <ArrowDownLeft className="w-3.5 h-3.5 stroke-[2.5]" />
                           Income
                         </Badge>
                       )}
                       {isTransfer && (
-                        <Badge variant="info" size="sm">
-                          <ArrowLeftRight className="w-3 h-3" />
+                        <Badge variant="info" size="sm" className="font-mono font-bold text-xs px-2.5 py-1">
+                          <ArrowLeftRight className="w-3.5 h-3.5 stroke-[2.5]" />
                           Transfer
                         </Badge>
                       )}
                     </td>
 
                     {/* Date */}
-                    <td className="py-3 px-4 whitespace-nowrap font-medium text-slate-600 dark:text-slate-300">
+                    <td className="py-4 px-5 whitespace-nowrap font-medium text-slate-600 dark:text-slate-300">
                       {formatDate(tx.date)}
                     </td>
 
                     {/* Merchant / Description */}
-                    <td className="py-3 px-4 max-w-xs truncate">
-                      <span className="font-bold text-slate-800 dark:text-slate-200">
+                    <td className="py-4 px-5 max-w-xs truncate">
+                      <span className="font-bold text-slate-900 dark:text-white">
                         {tx.merchant || (isTransfer ? "Account Transfer" : tx.category?.name || "Transaction")}
                       </span>
                       {tx.notes && (
-                        <p className="text-[11px] text-slate-400 truncate mt-0.5">{tx.notes}</p>
+                        <p className="text-xs text-slate-400 truncate mt-0.5">{tx.notes}</p>
                       )}
                     </td>
 
                     {/* Category */}
-                    <td className="py-3 px-4 whitespace-nowrap">
+                    <td className="py-4 px-5 whitespace-nowrap">
                       {tx.category ? (
-                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[11px] font-medium">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800/80 text-slate-800 dark:text-slate-200 text-xs font-semibold">
                           {tx.category.color && (
                             <span
-                              className="w-2 h-2 rounded-full"
+                              className="w-2.5 h-2.5 rounded-full"
                               style={{ backgroundColor: tx.category.color }}
                             />
                           )}
                           {tx.category.name}
                         </span>
                       ) : (
-                        <span className="text-slate-400 text-[11px]">
+                        <span className="text-slate-400 text-xs">
                           {isTransfer ? "—" : "Uncategorized"}
                         </span>
                       )}
                     </td>
 
                     {/* Account */}
-                    <td className="py-3 px-4 whitespace-nowrap">
-                      <div className="text-slate-700 dark:text-slate-300 font-medium">
+                    <td className="py-4 px-5 whitespace-nowrap">
+                      <div className="text-slate-700 dark:text-slate-300 font-semibold">
                         {tx.account?.name}
                         {isTransfer && tx.toAccount && (
-                          <span className="text-slate-400"> → {tx.toAccount.name}</span>
+                          <span className="text-slate-400 font-normal"> → {tx.toAccount.name}</span>
                         )}
                       </div>
                     </td>
 
                     {/* Amount */}
-                    <td className="py-3 px-4 text-right whitespace-nowrap">
+                    <td className="py-4 px-5 text-right whitespace-nowrap">
                       <span
-                        className={`font-bold ${
+                        className={`font-mono font-black text-base tracking-tight ${
                           isExpense
                             ? "text-rose-600 dark:text-rose-400"
                             : isIncome
@@ -183,27 +185,27 @@ export function TransactionTable({
                         }`}
                       >
                         {isExpense ? "-" : isIncome ? "+" : ""}
-                        {formatCurrency(tx.amountPaise)}
+                        {formatMoney(tx.amountPaise)}
                       </span>
                     </td>
 
                     {/* Action buttons */}
-                    <td className="py-3 px-4 whitespace-nowrap text-center">
-                      <div className="flex items-center justify-center gap-1">
+                    <td className="py-4 px-5 whitespace-nowrap text-center">
+                      <div className="flex items-center justify-center gap-1.5">
                         <button
                           onClick={() => onEdit(tx)}
                           title="Edit transaction"
-                          className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                          className="p-2 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                         >
-                          <Edit2 className="w-3.5 h-3.5" />
+                          <Edit2 className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => confirmDelete(tx.id)}
                           disabled={deletingId === tx.id}
                           title="Delete transaction"
-                          className="p-1.5 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
+                          className="p-2 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
                         >
-                          <Trash2 className="w-3.5 h-3.5" />
+                          <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
                     </td>
@@ -217,22 +219,23 @@ export function TransactionTable({
 
       {/* Pagination Footer */}
       {pagination.totalPages > 1 && (
-        <div className="p-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500">
+        <div className="p-5 border-t border-slate-200/70 dark:border-white/10 flex items-center justify-between text-sm text-slate-500">
           <span>
-            Page {pagination.page} of {pagination.totalPages}
+            Page <span className="font-mono font-bold text-slate-900 dark:text-white">{pagination.page}</span> of{" "}
+            <span className="font-mono font-bold text-slate-900 dark:text-white">{pagination.totalPages}</span>
           </span>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-2">
             <button
               onClick={() => onPageChange(pagination.page - 1)}
               disabled={pagination.page <= 1}
-              className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-slate-50 dark:hover:bg-slate-800"
+              className="p-2 rounded-xl border border-slate-200 dark:border-slate-700 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
             <button
               onClick={() => onPageChange(pagination.page + 1)}
               disabled={pagination.page >= pagination.totalPages}
-              className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-slate-50 dark:hover:bg-slate-800"
+              className="p-2 rounded-xl border border-slate-200 dark:border-slate-700 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
